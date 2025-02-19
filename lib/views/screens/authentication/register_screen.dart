@@ -3,14 +3,16 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:test_store_app/constants/my_colors.dart';
 import 'package:test_store_app/constants/my_images.dart';
 import 'package:test_store_app/utils/validation_utils.dart';
-import 'package:test_store_app/views/screens/authentication/register_screen.dart';
+import 'package:test_store_app/views/screens/authentication/login_screen.dart';
 import 'package:test_store_app/views/widgets/authentication_decorated_button.dart';
 import 'package:test_store_app/views/widgets/authentication_text_input.dart';
 import 'package:test_store_app/views/widgets/navigation_link_text.dart';
 
-class LoginScreen extends StatelessWidget {
-  LoginScreen({super.key});
+class RegisterScreen extends StatelessWidget {
+  RegisterScreen({super.key});
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,7 +27,7 @@ class LoginScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Login to Your Account',
+                    'Create Your Account',
                     style: GoogleFonts.lato(
                         color: MyColors.defaultFont,
                         fontWeight: FontWeight.bold,
@@ -43,6 +45,13 @@ class LoginScreen extends StatelessWidget {
                       name: 'Email',
                       hintLabel: 'Enter your email',
                       validator: ValidationUtils.emailValidation),
+                  const SizedBox(height: 20),
+                  AuthenticationTextInput(
+                      name: 'Full Name',
+                      hintLabel: 'Enter your full name',
+                      validator: (fullName) =>
+                          ValidationUtils.textNotEmptyValidation(fullName,
+                              emptyMessage: 'Enter your full name')),
                   const SizedBox(height: 16),
                   AuthenticationTextInput(
                       name: 'Password',
@@ -50,7 +59,7 @@ class LoginScreen extends StatelessWidget {
                       validator: ValidationUtils.passwordValidation),
                   const SizedBox(height: 24),
                   AuthenticationDecoratedButton(
-                      text: 'Sign In',
+                      text: 'Sign Up',
                       onTapButton: () {
                         if (_formKey.currentState!.validate()) {
                           print('correct');
@@ -60,9 +69,9 @@ class LoginScreen extends StatelessWidget {
                       }),
                   const SizedBox(height: 20),
                   NavigationLinkText(
-                    text: 'Need an account',
-                    clickableText: 'Sing up',
-                    navigationRoute: RegisterScreen(),
+                    text: 'Already have an Account',
+                    clickableText: 'Sing in',
+                    navigationRoute: LoginScreen(),
                   )
                 ],
               ),
