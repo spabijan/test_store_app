@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:test_store_app/utils/get_it/get_it_utils.dart';
 import 'package:test_store_app/views/screens/authentication/login_screen.dart';
 
 void main() {
+  GetItUtils.getitSetup();
   runApp(const MyApp());
 }
 

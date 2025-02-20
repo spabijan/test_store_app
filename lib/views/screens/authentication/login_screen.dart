@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:test_store_app/constants/my_colors.dart';
 import 'package:test_store_app/constants/my_images.dart';
+import 'package:test_store_app/controllers/auth_controller.dart';
 import 'package:test_store_app/utils/validation_utils.dart';
 import 'package:test_store_app/views/screens/authentication/register_screen.dart';
 import 'package:test_store_app/views/widgets/authentication_decorated_button.dart';
@@ -11,6 +13,9 @@ import 'package:test_store_app/views/widgets/navigation_link_text.dart';
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  late String email;
+  late String password;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,22 +45,25 @@ class LoginScreen extends StatelessWidget {
                   Image.asset(MyImages.ilustrationImagePath,
                       width: 200, height: 200),
                   AuthenticationTextInput(
+                      onChanged: (text) => email = text,
                       name: 'Email',
                       hintLabel: 'Enter your email',
                       validator: ValidationUtils.emailValidation),
                   const SizedBox(height: 16),
                   AuthenticationTextInput(
+                      onChanged: (text) => password = text,
                       name: 'Password',
                       hintLabel: 'Enter your password',
                       validator: ValidationUtils.passwordValidation),
                   const SizedBox(height: 24),
                   AuthenticationDecoratedButton(
                       text: 'Sign In',
-                      onTapButton: () {
+                      onTapButton: () async {
                         if (_formKey.currentState!.validate()) {
-                          print('correct');
-                        } else {
-                          print('failed');
+                          await GetIt.I.get<AuthController>().signInUser(
+                              context: context,
+                              email: email,
+                              password: password);
                         }
                       }),
                   const SizedBox(height: 20),

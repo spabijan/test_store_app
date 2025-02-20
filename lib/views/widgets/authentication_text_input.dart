@@ -3,15 +3,19 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:test_store_app/constants/my_images.dart';
 
 class AuthenticationTextInput extends StatelessWidget {
-  AuthenticationTextInput({
+  const AuthenticationTextInput({
     required this.name,
     required this.hintLabel,
+    this.onChanged,
     this.validator,
     super.key,
   });
+
   final String name;
   final String hintLabel;
-  FormFieldValidator<String>? validator;
+  final FormFieldValidator<String>? validator;
+  final void Function(String text)? onChanged;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -22,6 +26,7 @@ class AuthenticationTextInput extends StatelessWidget {
                 style: GoogleFonts.nunitoSans(
                     fontWeight: FontWeight.w600, letterSpacing: 0.2))),
         TextFormField(
+          onChanged: onChanged,
           validator: validator,
           decoration: InputDecoration(
               prefixIcon: Padding(
