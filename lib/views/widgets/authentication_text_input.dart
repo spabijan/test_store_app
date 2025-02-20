@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:test_store_app/constants/my_images.dart';
+import 'package:test_store_app/r.dart';
 
 class AuthenticationTextInput extends StatelessWidget {
   const AuthenticationTextInput({
@@ -31,7 +31,7 @@ class AuthenticationTextInput extends StatelessWidget {
           decoration: InputDecoration(
               prefixIcon: Padding(
                 padding: const EdgeInsets.all(10.0),
-                child: Image.asset(MyImages.emailIcon, width: 16, height: 16),
+                child: Image.asset(AssetIcons.email, width: 16, height: 16),
               ),
               labelText: hintLabel,
               labelStyle:

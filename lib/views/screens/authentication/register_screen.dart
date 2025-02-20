@@ -2,22 +2,41 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:test_store_app/constants/my_colors.dart';
-import 'package:test_store_app/constants/my_images.dart';
 import 'package:test_store_app/controllers/auth_controller.dart';
+import 'package:test_store_app/r.dart';
 import 'package:test_store_app/utils/validation_utils.dart';
 import 'package:test_store_app/views/screens/authentication/login_screen.dart';
 import 'package:test_store_app/views/widgets/authentication_decorated_button.dart';
 import 'package:test_store_app/views/widgets/authentication_text_input.dart';
 import 'package:test_store_app/views/widgets/navigation_link_text.dart';
 
-class RegisterScreen extends StatelessWidget {
-  RegisterScreen({super.key});
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
 
-  //final AuthController _authController = GetIt.I.get<AuthController>();
+  @override
+  State<RegisterScreen> createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends State<RegisterScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late String email;
+
   late String fullName;
+
   late String password;
+
+  bool _isLoading = false;
+
+  Future<void> _registerUser(BuildContext context) async {
+    setState(() => _isLoading = true);
+    final result = await GetIt.I.get<AuthController>().signupUser(
+        context: context, email: email, fullName: fullName, password: password);
+    setState(() => _isLoading = false);
+    if (result == AuthControllerResult.success && context.mounted) {
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (_) => const LoginScreen()));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +64,7 @@ class RegisterScreen extends StatelessWidget {
                           fontSize: 12,
                           letterSpacing: 0.2,
                           color: MyColors.defaultFont)),
-                  Image.asset(MyImages.ilustrationImagePath,
+                  Image.asset(AssetImages.illustration,
                       width: 200, height: 200),
                   AuthenticationTextInput(
                       name: 'Email',
@@ -68,20 +87,15 @@ class RegisterScreen extends StatelessWidget {
                       validator: ValidationUtils.passwordValidation),
                   const SizedBox(height: 24),
                   AuthenticationDecoratedButton(
+                      shouldShowLoader: _isLoading,
                       text: 'Sign Up',
                       onTapButton: () async {
                         if (_formKey.currentState!.validate()) {
-                          print(
-                              'email: $email, fullname: $fullName, password: $password');
-                          await GetIt.I.get<AuthController>().signupUser(
-                              context: context,
-                              email: email,
-                              fullName: fullName,
-                              password: password);
+                          _registerUser(context);
                         }
                       }),
                   const SizedBox(height: 20),
-                  NavigationLinkText(
+                  const NavigationLinkText(
                     text: 'Already have an Account',
                     clickableText: 'Sing in',
                     navigationRoute: LoginScreen(),

@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AuthenticationDecoratedButton extends StatelessWidget {
-  const AuthenticationDecoratedButton(
-      {required this.text, super.key, this.onTapButton});
+  AuthenticationDecoratedButton(
+      {required this.text,
+      super.key,
+      this.onTapButton,
+      this.shouldShowLoader = false});
 
   final String text;
   final void Function()? onTapButton;
+  bool shouldShowLoader;
 
   @override
   Widget build(BuildContext context) {
@@ -63,11 +67,15 @@ class AuthenticationDecoratedButton extends StatelessWidget {
                   )),
             ),
             Center(
-                child: Text(text,
-                    style: GoogleFonts.lato(
+                child: shouldShowLoader
+                    ? const CircularProgressIndicator(
                         color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold)))
+                      )
+                    : Text(text,
+                        style: GoogleFonts.lato(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold)))
           ])),
     );
   }

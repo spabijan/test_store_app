@@ -6,51 +6,62 @@ import 'package:test_store_app/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:test_store_app/services/manage_http_response.dart';
 
+enum AuthControllerResult { success, failure, error }
+
 class AuthController {
-  Future<void> signupUser(
+  Future<AuthControllerResult> signupUser(
       {required BuildContext context,
       required String email,
       required String fullName,
       required String password}) async {
     try {
       final user = User(fullName: fullName, email: email, password: password);
-
       final http.Response response = await http.post(
           Uri.parse('${MyGlobalVariables.uri}/api/signup'),
-          body: user.toJson(),
+          body: json.encode(user.toJson()),
           headers: MyGlobalVariables.headers);
-
-      HttpResponseUtils.manageHttpResponse(
-        response: response,
-        context: context,
-        onSuccess: () {
-          HttpResponseUtils.showSnackbar(context, 'Account has been created');
-        },
-      );
+      if (context.mounted) {
+        HttpResponseUtils.manageHttpResponse(
+          response: response,
+          context: context,
+          onSuccess: () {
+            HttpResponseUtils.showSnackbar(context, 'Account has been created');
+          },
+        );
+      }
+      return AuthControllerResult.success;
     } catch (e) {
-      HttpResponseUtils.showSnackbar(context, e.toString());
+      if (context.mounted) {
+        HttpResponseUtils.showSnackbar(context, e.toString());
+      }
+      return AuthControllerResult.failure;
     }
   }
 
-  Future<void> signInUser(
+  Future<AuthControllerResult> signInUser(
       {required BuildContext context,
       required String email,
       required String password}) async {
     try {
       final http.Response response = await http.post(
           Uri.parse('${MyGlobalVariables.uri}/api/signIn'),
-          body: jsonEncode({'email': email, 'password': password}),
+          body: json.encode({'email': email, 'password': password}),
           headers: MyGlobalVariables.headers);
-
-      HttpResponseUtils.manageHttpResponse(
-        response: response,
-        context: context,
-        onSuccess: () {
-          HttpResponseUtils.showSnackbar(context, 'User has been logged in');
-        },
-      );
+      if (context.mounted) {
+        HttpResponseUtils.manageHttpResponse(
+          response: response,
+          context: context,
+          onSuccess: () {
+            HttpResponseUtils.showSnackbar(context, 'User has been logged in');
+          },
+        );
+      }
+      return AuthControllerResult.success;
     } catch (e) {
-      HttpResponseUtils.showSnackbar(context, e.toString());
+      if (context.mounted) {
+        HttpResponseUtils.showSnackbar(context, e.toString());
+      }
+      return AuthControllerResult.failure;
     }
   }
 }
