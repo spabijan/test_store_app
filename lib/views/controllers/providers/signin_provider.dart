@@ -17,7 +17,7 @@ class Signin extends _$Signin {
     state = const AsyncLoading();
     final key = _key;
 
-    final newState = await AsyncValue.guard(() => ref
+    final newState = await AsyncValue.guard(() async => await ref
         .read(authServiceProvider)
         .signInUser(email: email, password: password));
 

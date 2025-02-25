@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:test_store_app/constants/my_colors.dart';
-import 'package:test_store_app/controllers/providers/signup_provider.dart';
+import 'package:test_store_app/views/controllers/providers/signup_provider.dart';
 import 'package:test_store_app/r.dart';
 import 'package:test_store_app/services/manage_http_response.dart';
 import 'package:test_store_app/utils/validation_utils.dart';
