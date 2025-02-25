@@ -5,13 +5,13 @@ class NavigationLinkText extends StatelessWidget {
   const NavigationLinkText({
     required this.text,
     required this.clickableText,
-    required this.navigationRoute,
+    required this.onClick,
     super.key,
   });
 
   final String text;
   final String clickableText;
-  final Widget navigationRoute;
+  final GestureTapCallback? onClick;
 
   @override
   Widget build(BuildContext context) {
@@ -22,8 +22,7 @@ class NavigationLinkText extends StatelessWidget {
             style: GoogleFonts.lato(
                 fontWeight: FontWeight.w500, letterSpacing: 1)),
         InkWell(
-          onTap: () => Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (_) => navigationRoute)),
+          onTap: onClick,
           child: Text(clickableText,
               style: GoogleFonts.roboto(
                   fontWeight: FontWeight.bold, color: const Color(0xff103de5))),

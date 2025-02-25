@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:test_store_app/constants/my_colors.dart';
-import 'package:test_store_app/controllers/auth_controller.dart';
+import 'package:test_store_app/controllers/providers/signin_provider.dart';
 import 'package:test_store_app/r.dart';
+import 'package:test_store_app/services/manage_http_response.dart';
 import 'package:test_store_app/utils/validation_utils.dart';
 import 'package:test_store_app/views/screens/authentication/register_screen.dart';
 import 'package:test_store_app/views/screens/main_screen.dart';
@@ -11,37 +12,53 @@ import 'package:test_store_app/views/widgets/authentication_decorated_button.dar
 import 'package:test_store_app/views/widgets/authentication_text_input.dart';
 import 'package:test_store_app/views/widgets/navigation_link_text.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends ConsumerState<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  AutovalidateMode _autovalidateMode = AutovalidateMode.disabled;
 
   late String email;
-
   late String password;
 
-  bool _isLoading = false;
-
-  Future<void> _loginUser(BuildContext context) async {
-    setState(() => _isLoading = true);
-    final result = await GetIt.I
-        .get<AuthController>()
-        .signInUser(context: context, email: email, password: password);
-    setState(() => _isLoading = false);
-    if (result == AuthControllerResult.success && context.mounted) {
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (_) => const MainScreen()),
-          (route) => false);
+  Future<void> _loginUser() async {
+    setState(() => _autovalidateMode = AutovalidateMode.always);
+    final form = _formKey.currentState;
+    if (form == null || !form.validate()) {
+      return;
     }
+
+    ref
+        .read(signinProvider.notifier)
+        .signinUser(email: email, password: password);
   }
 
   @override
   Widget build(BuildContext context) {
+    ref.listen<AsyncValue<void>>(signinProvider, (previous, next) {
+      next.whenOrNull(error: (error, stackTrace) {
+        if (error is HttpError) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text(error.message)));
+        } else {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text(error.toString())));
+        }
+      });
+
+      next.whenData((value) => Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => const MainScreen()),
+            (route) => false,
+          ));
+    });
+
+    final signinState = ref.watch(signinProvider);
+
     return Scaffold(
       backgroundColor: Colors.white.withValues(alpha: 0.95),
       body: Padding(
@@ -50,6 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
           child: SingleChildScrollView(
             child: Form(
               key: _formKey,
+              autovalidateMode: _autovalidateMode,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -81,18 +99,24 @@ class _LoginScreenState extends State<LoginScreen> {
                       validator: ValidationUtils.passwordValidation),
                   const SizedBox(height: 24),
                   AuthenticationDecoratedButton(
-                      shouldShowLoader: _isLoading,
+                      shouldShowLoader: signinState.maybeWhen(
+                          loading: () => true, orElse: () => false),
                       text: 'Sign In',
                       onTapButton: () {
                         if (_formKey.currentState!.validate()) {
-                          _loginUser(context);
+                          _loginUser();
                         }
                       }),
                   const SizedBox(height: 20),
-                  const NavigationLinkText(
+                  NavigationLinkText(
                     text: 'Need an account',
                     clickableText: 'Sing up',
-                    navigationRoute: RegisterScreen(),
+                    onClick: signinState.maybeWhen(
+                      loading: () => null,
+                      orElse: () => () => Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                              builder: (_) => const RegisterScreen())),
+                    ),
                   )
                 ],
               ),
