@@ -4,7 +4,7 @@ import 'package:test_store_app/views/model/banner_view_model.dart';
 
 part 'banner_provider.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class Banners extends _$Banners {
   Object? _key;
 

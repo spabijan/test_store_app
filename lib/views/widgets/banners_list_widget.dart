@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:test_store_app/views/controllers/providers/banner_provider.dart';
+import 'package:test_store_app/controllers/providers/banner_provider.dart';
 import 'package:test_store_app/services/manage_http_response.dart';
 
 class BannerListWidget extends ConsumerStatefulWidget {
@@ -15,20 +15,26 @@ class _BannerWidgetState extends ConsumerState<BannerListWidget> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(bannersProvider.notifier).loadBanner();
+      ref.read(bannersProvider).whenData(
+        (value) {
+          if (value.isEmpty) {
+            ref.read(bannersProvider.notifier).loadBanner();
+          }
+        },
+      );
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    ref.listen(
-        bannersProvider,
-        (previous, next) => next.whenOrNull(error: (error, stackTrace) {
-              var errorMessage =
-                  error is HttpError ? error.message : error.toString();
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(SnackBar(content: Text(errorMessage)));
-            }));
+    ref.listen(bannersProvider, (previous, next) {
+      next.whenOrNull(error: (error, stackTrace) {
+        var errorMessage =
+            error is HttpError ? error.message : error.toString();
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(errorMessage)));
+      });
+    });
 
     final banners = ref.watch(bannersProvider);
 

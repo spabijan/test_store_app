@@ -1,11 +1,10 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:test_store_app/services/providers/banner_service_provider.dart';
 import 'package:test_store_app/services/providers/category_service_provider.dart';
 import 'package:test_store_app/views/model/category_view_model.dart';
 
 part 'category_provider.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class Categories extends _$Categories {
   Object? _key;
 
