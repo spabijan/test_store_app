@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:test_store_app/controllers/providers/category_item_provider.dart';
+import 'package:test_store_app/screens/category_screen/providers/category_item_provider.dart';
 
 class CategoryListItemWidget extends ConsumerWidget {
   const CategoryListItemWidget({super.key});

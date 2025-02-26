@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:test_store_app/controllers/providers/category_item_provider.dart';
-import 'package:test_store_app/controllers/providers/category_provider.dart';
-import 'package:test_store_app/controllers/providers/subcategories_provider.dart';
-import 'package:test_store_app/controllers/providers/subcategory_item_provider.dart';
+import 'package:test_store_app/screens/category_screen/providers/category_item_provider.dart';
+import 'package:test_store_app/screens/category_screen/providers/category_provider.dart';
+import 'package:test_store_app/screens/category_screen/providers/subcategories_provider.dart';
+import 'package:test_store_app/screens/category_screen/providers/subcategory_item_provider.dart';
 import 'package:test_store_app/services/manage_http_response.dart';
-import 'package:test_store_app/views/model/category_view_model.dart';
-import 'package:test_store_app/views/widgets/category_item_widget.dart';
-import 'package:test_store_app/views/widgets/header_widget.dart';
-import 'package:test_store_app/views/widgets/subcategory_list_item.dart';
+import 'package:test_store_app/screens/category_screen/models/category_view_model.dart';
+import 'package:test_store_app/screens/category_screen/components/category_item_widget.dart';
+import 'package:test_store_app/screens/widgets/header_widget.dart';
+import 'package:test_store_app/screens/category_screen/components/subcategory_list_item.dart';
 
 class CategoryScreen extends ConsumerStatefulWidget {
   const CategoryScreen({super.key});

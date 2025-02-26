@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:test_store_app/services/manage_http_response.dart';
-import 'package:test_store_app/controllers/providers/category_item_provider.dart';
-import 'package:test_store_app/controllers/providers/category_provider.dart';
-import 'package:test_store_app/views/model/category_view_model.dart';
-import 'package:test_store_app/views/screens/deatil/inner_category_screen/inner_category_screen.dart';
-import 'package:test_store_app/views/widgets/category_item_widget.dart';
-import 'package:test_store_app/views/widgets/section_header_widget.dart';
+import 'package:test_store_app/screens/category_screen/providers/category_item_provider.dart';
+import 'package:test_store_app/screens/category_screen/providers/category_provider.dart';
+import 'package:test_store_app/screens/category_screen/models/category_view_model.dart';
+import 'package:test_store_app/screens/category_screen/inner_category_screen.dart';
+import 'package:test_store_app/screens/category_screen/components/category_item_widget.dart';
+import 'package:test_store_app/screens/widgets/section_header_widget.dart';
 
 class CategoryListWidget extends ConsumerStatefulWidget {
   const CategoryListWidget({super.key});

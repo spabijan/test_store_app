@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:test_store_app/controllers/providers/subcategory_item_provider.dart';
+import 'package:test_store_app/screens/category_screen/providers/subcategory_item_provider.dart';
 
 class SubcategoryListItem extends ConsumerStatefulWidget {
   const SubcategoryListItem({super.key});

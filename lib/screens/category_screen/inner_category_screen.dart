@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:test_store_app/controllers/providers/category_item_provider.dart';
-import 'package:test_store_app/views/screens/deatil/inner_category_screen/widgets/inner_banner_widget.dart';
-import 'package:test_store_app/views/widgets/header_widget.dart';
+import 'package:test_store_app/screens/category_screen/providers/category_item_provider.dart';
+import 'package:test_store_app/screens/components/banner/inner_banner_widget.dart';
+import 'package:test_store_app/screens/widgets/header_widget.dart';
 
 class InnerCategoryScreen extends ConsumerStatefulWidget {
   const InnerCategoryScreen({super.key});

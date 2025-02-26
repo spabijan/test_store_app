@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:test_store_app/constants/my_colors.dart';
-import 'package:test_store_app/controllers/providers/signup_provider.dart';
+import 'package:test_store_app/screens/authentication/create_account/providers/signup_provider.dart';
 import 'package:test_store_app/r.dart';
 import 'package:test_store_app/services/manage_http_response.dart';
-import 'package:test_store_app/utils/validation_utils.dart';
+import 'package:test_store_app/services/utils/validation_utils.dart';
 import 'package:test_store_app/screens/main_screen.dart';
-import 'package:test_store_app/views/widgets/authentication_decorated_button.dart';
-import 'package:test_store_app/views/widgets/authentication_text_input.dart';
-import 'package:test_store_app/views/widgets/navigation_link_text.dart';
+import 'package:test_store_app/screens/authentication/widgets/authentication_decorated_button.dart';
+import 'package:test_store_app/screens/authentication/widgets/authentication_text_input.dart';
+import 'package:test_store_app/screens/widgets/navigation_link_text.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
