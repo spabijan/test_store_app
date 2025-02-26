@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:test_store_app/views/screens/main_screen.dart';
+import 'package:test_store_app/screens/main_screen.dart';
 
 void main() {
   runApp(

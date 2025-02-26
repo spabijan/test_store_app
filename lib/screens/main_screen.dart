@@ -3,12 +3,12 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:test_store_app/controllers/providers/category_provider.dart';
 import 'package:test_store_app/r.dart';
-import 'package:test_store_app/views/screens/root_screens/account_screen.dart';
-import 'package:test_store_app/views/screens/root_screens/cart_screen.dart';
-import 'package:test_store_app/views/screens/root_screens/category_screen.dart';
-import 'package:test_store_app/views/screens/root_screens/favorite_screen.dart';
-import 'package:test_store_app/views/screens/root_screens/home_screen.dart';
-import 'package:test_store_app/views/screens/root_screens/stores_screen.dart';
+import 'package:test_store_app/screens/account_screen.dart';
+import 'package:test_store_app/screens/cart_screen.dart';
+import 'package:test_store_app/screens/category_screen/category_screen.dart';
+import 'package:test_store_app/screens/favorite_screen.dart';
+import 'package:test_store_app/screens/home_screen.dart';
+import 'package:test_store_app/screens/stores_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});

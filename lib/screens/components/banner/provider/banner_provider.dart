@@ -1,6 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:test_store_app/services/providers/banner_service_provider.dart';
-import 'package:test_store_app/views/model/banner_view_model.dart';
+import 'package:test_store_app/screens/components/banner/model/banner_view_model.dart';
 
 part 'banner_provider.g.dart';
 
