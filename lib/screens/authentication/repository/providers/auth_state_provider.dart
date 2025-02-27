@@ -1,5 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:test_store_app/screens/authentication/repository/providers/token_repository_provider.dart';
+import 'package:test_store_app/screens/authentication/repository/providers/user_repository_provider.dart';
 
 part 'auth_state_provider.g.dart';
 
@@ -11,11 +12,15 @@ class AuthState extends _$AuthState {
   }
 
   void updateState() async {
-    state = const AsyncLoading();
-
     state = await AsyncValue.guard(() async {
       return await _checkState();
     });
+  }
+
+  void signOut() async {
+    await ref.read(tokenRepositoryProvider).deleteToken();
+    await ref.read(userRepositoryProvider).deleteUser();
+    updateState();
   }
 
   Future<AuthStates> _checkState() async {

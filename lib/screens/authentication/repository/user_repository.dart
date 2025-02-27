@@ -19,7 +19,7 @@ class UserRepository {
     await storage.write(key: key, value: userJson);
   }
 
-  void deleteUser() async {
+  Future<void> deleteUser() async {
     FlutterSecureStorage storage = _getStorage();
     await storage.delete(key: key);
   }

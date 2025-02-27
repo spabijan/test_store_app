@@ -8,12 +8,12 @@ class TokenRepository {
     return value;
   }
 
-  void setToken(String token) async {
+  Future<void> setToken(String token) async {
     FlutterSecureStorage storage = _getStorage();
     await storage.write(key: key, value: token);
   }
 
-  void deleteToken() async {
+  Future<void> deleteToken() async {
     FlutterSecureStorage storage = _getStorage();
     await storage.delete(key: key);
   }

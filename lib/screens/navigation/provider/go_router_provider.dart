@@ -21,8 +21,14 @@ GoRouter router(Ref ref) {
   return GoRouter(
       redirect: (context, state) async {
         final token = await ref.read(tokenRepositoryProvider).getToken();
-        if (token != null && token.isNotEmpty) {
+        final isInAuthenticationRoute =
+            (state.matchedLocation == '/${RouteNames.signin}') ||
+                (state.matchedLocation == '/${RouteNames.signup}');
+        if (isInAuthenticationRoute && token != null && token.isNotEmpty) {
           return '/${RouteNames.home}';
+        }
+        if (!isInAuthenticationRoute && (token == null || token.isEmpty)) {
+          return '/${RouteNames.signin}';
         }
         return null;
       },
