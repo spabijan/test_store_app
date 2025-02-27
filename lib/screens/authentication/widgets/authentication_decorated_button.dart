@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AuthenticationDecoratedButton extends StatelessWidget {
-  AuthenticationDecoratedButton(
+  const AuthenticationDecoratedButton(
       {required this.text,
       super.key,
       this.onTapButton,
@@ -10,7 +10,7 @@ class AuthenticationDecoratedButton extends StatelessWidget {
 
   final String text;
   final void Function()? onTapButton;
-  bool shouldShowLoader;
+  final bool shouldShowLoader;
 
   @override
   Widget build(BuildContext context) {
