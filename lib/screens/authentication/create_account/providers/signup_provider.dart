@@ -20,9 +20,13 @@ class Signup extends _$Signup {
     state = const AsyncLoading();
     final key = _key;
 
-    final newState = await AsyncValue.guard(() => ref
-        .read(authServiceProvider)
-        .signupUser(fullName: fullName, email: email, password: password));
+    final newState = await AsyncValue.guard(() async {
+      /*final authResult = */ await ref
+          .read(authServiceProvider)
+          .signupUser(fullName: fullName, email: email, password: password);
+      // ref.read(tokenRepositoryProvider).setToken(authResult.tokenJson);
+      // ref.read(userRepositoryProvider).setUser(authResult.userJson);
+    });
 
     if (key == _key) {
       state = newState;

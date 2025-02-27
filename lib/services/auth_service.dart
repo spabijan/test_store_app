@@ -5,8 +5,15 @@ import 'package:test_store_app/models/user/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:test_store_app/services/manage_http_response.dart';
 
+final class AuthResultClass {
+  AuthResultClass({required this.userJson, required this.tokenJson});
+
+  final String userJson;
+  final String tokenJson;
+}
+
 class AuthService {
-  Future<void> signupUser(
+  Future<AuthResultClass> signupUser(
       {required String email,
       required String fullName,
       required String password}) async {
@@ -17,12 +24,17 @@ class AuthService {
           body: json.encode(user.toJson()),
           headers: MyGlobalVariables.headers);
       HttpResponseUtils.checkForHttpResponseErrors(response: response);
+
+      String tokenJson = jsonDecode(response.body)['token'];
+      final userJson = jsonEncode(jsonDecode(response.body)['user']);
+
+      return AuthResultClass(userJson: userJson, tokenJson: tokenJson);
     } catch (e) {
       rethrow;
     }
   }
 
-  Future<void> signInUser(
+  Future<AuthResultClass> signInUser(
       {required String email, required String password}) async {
     try {
       final http.Response response = await http.post(
@@ -30,6 +42,11 @@ class AuthService {
           body: json.encode({'email': email, 'password': password}),
           headers: MyGlobalVariables.headers);
       HttpResponseUtils.checkForHttpResponseErrors(response: response);
+
+      String tokenJson = jsonDecode(response.body)['token'];
+      final userJson = jsonEncode(jsonDecode(response.body)['user']);
+
+      return AuthResultClass(userJson: userJson, tokenJson: tokenJson);
     } catch (e) {
       rethrow;
     }

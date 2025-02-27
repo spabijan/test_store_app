@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:test_store_app/constants/my_colors.dart';
 import 'package:test_store_app/screens/authentication/create_account/providers/signup_provider.dart';
 import 'package:test_store_app/r.dart';
-import 'package:test_store_app/screens/home_screen.dart';
 import 'package:test_store_app/screens/navigation/route_names.dart';
 import 'package:test_store_app/services/manage_http_response.dart';
 import 'package:test_store_app/services/utils/validation_utils.dart';
