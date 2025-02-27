@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:test_store_app/screens/components/banner/provider/banner_provider.dart';
-import 'package:test_store_app/services/manage_http_response.dart';
+import 'package:test_store_app/model/services/manage_http_response.dart';
 
 class BannerListWidget extends ConsumerStatefulWidget {
   const BannerListWidget({super.key});

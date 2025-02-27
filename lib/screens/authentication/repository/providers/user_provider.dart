@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:test_store_app/models/user/user.dart';
+import 'package:test_store_app/model/models/user/user.dart';
 
 part 'user_provider.g.dart';
 

@@ -1,5 +1,5 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:test_store_app/services/providers/category_service_provider.dart';
+import 'package:test_store_app/model/services/providers/category_service_provider.dart';
 import 'package:test_store_app/screens/category_screen/models/category_view_model.dart';
 
 part 'category_provider.g.dart';

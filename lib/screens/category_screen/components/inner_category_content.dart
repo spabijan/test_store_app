@@ -6,7 +6,7 @@ import 'package:test_store_app/screens/category_screen/providers/category_item_p
 import 'package:test_store_app/screens/category_screen/providers/subcategories_provider.dart';
 import 'package:test_store_app/screens/category_screen/providers/subcategory_item_provider.dart';
 import 'package:test_store_app/screens/components/banner/inner_banner_widget.dart';
-import 'package:test_store_app/services/manage_http_response.dart';
+import 'package:test_store_app/model/services/manage_http_response.dart';
 
 class InnerCategoryContent extends ConsumerStatefulWidget {
   const InnerCategoryContent({super.key});

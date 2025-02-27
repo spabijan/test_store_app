@@ -1,4 +1,4 @@
-import 'package:test_store_app/models/baner/baner_model.dart';
+import 'package:test_store_app/model/models/baner/baner_model.dart';
 
 class BannerViewModel {
   BannerViewModel({required BannerModel bannerModel})

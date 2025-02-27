@@ -1,4 +1,4 @@
-import 'package:test_store_app/models/category/category.dart';
+import 'package:test_store_app/model/models/category/category.dart';
 
 class CategoryViewModel {
   CategoryViewModel({required CategoryModel categoryModel})

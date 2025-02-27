@@ -1,4 +1,4 @@
-import 'package:test_store_app/models/subcategory/subcategory.dart';
+import 'package:test_store_app/model/models/subcategory/subcategory.dart';
 
 class SubcategoryViewModel {
   SubcategoryViewModel({required SubcategoryModel subcategoryModel})

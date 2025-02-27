@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:test_store_app/services/providers/subcategory_service_provider.dart';
+import 'package:test_store_app/model/services/providers/subcategory_service_provider.dart';
 import 'package:test_store_app/screens/category_screen/models/subcategory_view_model.dart';
 
 part 'subcategories_provider.g.dart';

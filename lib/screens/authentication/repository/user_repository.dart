@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:test_store_app/models/user/user.dart';
+import 'package:test_store_app/model/models/user/user.dart';
 
 class UserRepository {
   static const key = 'USER';

@@ -6,7 +6,7 @@ import 'package:test_store_app/screens/category_screen/providers/category_provid
 import 'package:test_store_app/screens/category_screen/providers/subcategories_provider.dart';
 import 'package:test_store_app/screens/category_screen/providers/subcategory_item_provider.dart';
 import 'package:test_store_app/screens/navigation/navigation_tapbar.dart';
-import 'package:test_store_app/services/manage_http_response.dart';
+import 'package:test_store_app/model/services/manage_http_response.dart';
 import 'package:test_store_app/screens/category_screen/models/category_view_model.dart';
 import 'package:test_store_app/screens/category_screen/components/category_item_widget.dart';
 import 'package:test_store_app/screens/widgets/header_widget.dart';
