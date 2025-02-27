@@ -2,17 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:test_store_app/screens/category_screen/providers/subcategory_item_provider.dart';
 
-class SubcategoryListItem extends ConsumerStatefulWidget {
+class SubcategoryListItem extends ConsumerWidget {
   const SubcategoryListItem({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _SubcategoryListItemState();
-}
-
-class _SubcategoryListItemState extends ConsumerState<SubcategoryListItem> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     var subcategory = ref.watch(subcategoryItemProvider);
     return Column(
       children: [

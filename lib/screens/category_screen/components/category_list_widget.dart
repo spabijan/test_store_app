@@ -51,27 +51,28 @@ class _CategoryListWidgetState extends ConsumerState<CategoryListWidget> {
       children: [
         const SectionHeaderWidget(title: 'Categories', subtitle: 'View all'),
         categories.map(
-            data: (data) {
-              return GridView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 4, mainAxisSpacing: 8, crossAxisSpacing: 8),
-                itemCount: data.value.length,
-                itemBuilder: (BuildContext context, int index) => InkWell(
-                  child: InkWell(
-                      onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => ProviderScope(overrides: [
-                                categoryItemProvider
-                                    .overrideWithValue(data.value[index])
-                              ], child: const InnerCategoryScreen()))),
-                      child: ProviderScope(overrides: [
-                        categoryItemProvider
-                            .overrideWithValue(data.value[index])
-                      ], child: const CategoryListItemWidget())),
+            data: (data) => GridView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 4,
+                      mainAxisSpacing: 8,
+                      crossAxisSpacing: 8),
+                  itemCount: data.value.length,
+                  itemBuilder: (BuildContext context, int index) => InkWell(
+                    child: InkWell(
+                        onTap: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (context) => ProviderScope(overrides: [
+                                      categoryItemProvider
+                                          .overrideWithValue(data.value[index])
+                                    ], child: const InnerCategoryScreen()))),
+                        child: ProviderScope(overrides: [
+                          categoryItemProvider
+                              .overrideWithValue(data.value[index])
+                        ], child: const CategoryListItemWidget())),
+                  ),
                 ),
-              );
-            },
             error: (errorState) {
               var e = errorState.error;
               var errorMessage =

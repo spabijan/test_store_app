@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:test_store_app/constants/my_colors.dart';
 import 'package:test_store_app/screens/authentication/login/providers/signin_provider.dart';
 import 'package:test_store_app/r.dart';
+import 'package:test_store_app/screens/navigation/route_names.dart';
 import 'package:test_store_app/services/manage_http_response.dart';
 import 'package:test_store_app/services/utils/validation_utils.dart';
 import 'package:test_store_app/screens/authentication/create_account/register_screen.dart';
-import 'package:test_store_app/screens/main_screen.dart';
 import 'package:test_store_app/screens/authentication/widgets/authentication_decorated_button.dart';
 import 'package:test_store_app/screens/authentication/widgets/authentication_text_input.dart';
 import 'package:test_store_app/screens/widgets/navigation_link_text.dart';
@@ -50,11 +51,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               .showSnackBar(SnackBar(content: Text(error.toString())));
         }
       });
-
-      next.whenData((value) => Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => const MainScreen()),
-            (route) => false,
-          ));
+      next.whenData((value) => GoRouter.of(context).goNamed(RouteNames.home));
     });
 
     final signinState = ref.watch(signinProvider);

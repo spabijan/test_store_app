@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:test_store_app/screens/category_screen/providers/category_item_provider.dart';
-import 'package:test_store_app/screens/components/banner/inner_banner_widget.dart';
+import 'package:test_store_app/screens/category_screen/components/inner_category_content.dart';
 import 'package:test_store_app/screens/widgets/header_widget.dart';
 
 class InnerCategoryScreen extends ConsumerStatefulWidget {
@@ -15,7 +14,6 @@ class InnerCategoryScreen extends ConsumerStatefulWidget {
 class _InnerCategoryScreenState extends ConsumerState<InnerCategoryScreen> {
   @override
   Widget build(BuildContext context) {
-    final category = ref.watch(categoryItemProvider);
     return Scaffold(
         appBar: PreferredSize(
             preferredSize:
@@ -37,10 +35,6 @@ class _InnerCategoryScreenState extends ConsumerState<InnerCategoryScreen> {
                 ),
               ],
             )),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [InnerBannerScreen(imageUrl: category.banner)],
-          ),
-        ));
+        body: const InnerCategoryContent());
   }
 }

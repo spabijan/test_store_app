@@ -1,7 +1,6 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
-import 'package:test_store_app/screens/category_screen/providers/category_provider.dart';
 import 'package:test_store_app/r.dart';
 import 'package:test_store_app/screens/account_screen.dart';
 import 'package:test_store_app/screens/cart_screen.dart';

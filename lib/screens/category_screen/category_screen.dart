@@ -5,6 +5,7 @@ import 'package:test_store_app/screens/category_screen/providers/category_item_p
 import 'package:test_store_app/screens/category_screen/providers/category_provider.dart';
 import 'package:test_store_app/screens/category_screen/providers/subcategories_provider.dart';
 import 'package:test_store_app/screens/category_screen/providers/subcategory_item_provider.dart';
+import 'package:test_store_app/screens/navigation/navigation_tapbar.dart';
 import 'package:test_store_app/services/manage_http_response.dart';
 import 'package:test_store_app/screens/category_screen/models/category_view_model.dart';
 import 'package:test_store_app/screens/category_screen/components/category_item_widget.dart';
@@ -146,6 +147,7 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
                   : const SizedBox.shrink())
         ],
       ),
+      bottomNavigationBar: NavigationTapBar(),
     );
   }
 
