@@ -16,4 +16,6 @@ class UserState extends _$UserState {
 
   void setCurrentUser(String userJson) =>
       state = User.fromJson(json.decode(userJson));
+
+  void logoutCurrentuser() => state = null;
 }

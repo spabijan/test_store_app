@@ -15,6 +15,14 @@ import 'package:test_store_app/screens/stores_screen.dart';
 
 part 'go_router_provider.g.dart';
 
+var _authenticationRoutes = ['/${RouteNames.signin}', '/${RouteNames.signup}'];
+
+bool _isInAuthenticationRoute(String matchedLocation) {
+  return _authenticationRoutes.contains(matchedLocation);
+}
+
+bool _hasLoginToken(String? token) => token != null && token.isNotEmpty;
+
 @riverpod
 GoRouter router(Ref ref) {
   //final authState = ref.watch(authStateProvider);
@@ -22,12 +30,12 @@ GoRouter router(Ref ref) {
       redirect: (context, state) async {
         final token = await ref.read(tokenRepositoryProvider).getToken();
         final isInAuthenticationRoute =
-            (state.matchedLocation == '/${RouteNames.signin}') ||
-                (state.matchedLocation == '/${RouteNames.signup}');
-        if (isInAuthenticationRoute && token != null && token.isNotEmpty) {
+            _isInAuthenticationRoute(state.matchedLocation);
+
+        if (isInAuthenticationRoute && _hasLoginToken(token)) {
           return '/${RouteNames.home}';
         }
-        if (!isInAuthenticationRoute && (token == null || token.isEmpty)) {
+        if (!isInAuthenticationRoute && !_hasLoginToken(token)) {
           return '/${RouteNames.signin}';
         }
         return null;

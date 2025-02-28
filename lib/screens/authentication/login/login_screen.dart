@@ -8,7 +8,6 @@ import 'package:test_store_app/r.dart';
 import 'package:test_store_app/screens/navigation/route_names.dart';
 import 'package:test_store_app/model/services/manage_http_response.dart';
 import 'package:test_store_app/model/services/utils/validation_utils.dart';
-import 'package:test_store_app/screens/authentication/create_account/register_screen.dart';
 import 'package:test_store_app/screens/authentication/widgets/authentication_decorated_button.dart';
 import 'package:test_store_app/screens/authentication/widgets/authentication_text_input.dart';
 import 'package:test_store_app/screens/widgets/navigation_link_text.dart';
@@ -110,9 +109,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     clickableText: 'Sing up',
                     onClick: signinState.maybeWhen(
                       loading: () => null,
-                      orElse: () => () => Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(
-                              builder: (_) => const RegisterScreen())),
+                      orElse: () =>
+                          () => GoRouter.of(context).goNamed(RouteNames.signup),
                     ),
                   )
                 ],
