@@ -50,7 +50,7 @@ class _CategoryListWidgetState extends ConsumerState<CategoryListWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SectionHeaderWidget(title: 'Categories', subtitle: 'View all'),
-        categories.map(
+        categories.maybeMap(
             data: (data) => GridView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
@@ -73,13 +73,9 @@ class _CategoryListWidgetState extends ConsumerState<CategoryListWidget> {
                         ], child: const CategoryListItemWidget())),
                   ),
                 ),
-            error: (errorState) {
-              var e = errorState.error;
-              var errorMessage =
-                  e is HttpError ? e.message : errorState.error.toString();
-              return Center(child: Text('Error $errorMessage'));
-            },
-            loading: (loading) => const CircularProgressIndicator.adaptive()),
+            loading: (loading) =>
+                const Center(child: CircularProgressIndicator.adaptive()),
+            orElse: SizedBox.shrink),
       ],
     );
   }

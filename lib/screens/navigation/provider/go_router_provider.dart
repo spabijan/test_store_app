@@ -8,6 +8,7 @@ import 'package:test_store_app/screens/authentication/repository/providers/token
 import 'package:test_store_app/screens/cart_screen.dart';
 import 'package:test_store_app/screens/category_screen/category_screen.dart';
 import 'package:test_store_app/screens/category_screen/inner_category_screen.dart';
+import 'package:test_store_app/screens/category_screen/product_detial_screen.dart';
 import 'package:test_store_app/screens/favorite_screen.dart';
 import 'package:test_store_app/screens/home_screen.dart';
 import 'package:test_store_app/screens/navigation/route_names.dart';
@@ -28,6 +29,8 @@ GoRouter router(Ref ref) {
   //final authState = ref.watch(authStateProvider);
   return GoRouter(
       redirect: (context, state) async {
+        //this is not reactive solution
+        //- for fully reactive check my test_vendor_app
         final token = await ref.read(tokenRepositoryProvider).getToken();
         final isInAuthenticationRoute =
             _isInAuthenticationRoute(state.matchedLocation);
@@ -71,10 +74,16 @@ GoRouter router(Ref ref) {
               const NoTransitionPage(child: CategoryScreen()),
           routes: [
             GoRoute(
-              path: '/${RouteNames.categoryDetails}',
-              name: RouteNames.categoryDetails,
-              builder: (context, state) => const InnerCategoryScreen(),
-            )
+                path: '/${RouteNames.categoryDetails}',
+                name: RouteNames.categoryDetails,
+                builder: (context, state) => const InnerCategoryScreen(),
+                routes: [
+                  GoRoute(
+                    path: '/${RouteNames.productDetails}',
+                    name: RouteNames.productDetails,
+                    builder: (_, __) => const ProductDetailScreen(),
+                  )
+                ])
           ],
         ),
         GoRoute(

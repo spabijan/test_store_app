@@ -1,5 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:test_store_app/screens/authentication/repository/providers/token_repository_provider.dart';
+import 'package:test_store_app/screens/authentication/repository/providers/user_provider.dart';
 import 'package:test_store_app/screens/authentication/repository/providers/user_repository_provider.dart';
 import 'package:test_store_app/model/services/providers/auth_controller_provider.dart';
 
@@ -24,6 +25,7 @@ class Signin extends _$Signin {
           .read(authServiceProvider)
           .signInUser(email: email, password: password);
 
+      ref.read(userStateProvider.notifier).setCurrentUser(authResult.userJson);
       ref.read(tokenRepositoryProvider).setToken(authResult.tokenJson);
       ref.read(userRepositoryProvider).setUser(authResult.userJson);
     });
