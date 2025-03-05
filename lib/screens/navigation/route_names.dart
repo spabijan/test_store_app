@@ -3,6 +3,9 @@ sealed class RouteNames {
   static const signin = 'signin';
   static const signup = 'signup';
   static const home = 'home';
+  static const dashboardCategory = 'home/category';
+  static const dashboardProduct = 'home/product';
+  static const categoryProduct = 'home/category/product';
   static const favourites = 'favourites';
   static const category = 'category';
   static const categoryDetails = 'categoryDetails';

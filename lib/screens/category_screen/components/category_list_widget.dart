@@ -4,12 +4,13 @@ import 'package:test_store_app/model/services/manage_http_response.dart';
 import 'package:test_store_app/screens/category_screen/providers/category_item_provider.dart';
 import 'package:test_store_app/screens/category_screen/providers/category_provider.dart';
 import 'package:test_store_app/screens/category_screen/models/category_view_model.dart';
-import 'package:test_store_app/screens/category_screen/inner_category_screen.dart';
 import 'package:test_store_app/screens/category_screen/components/category_item_widget.dart';
 import 'package:test_store_app/screens/widgets/section_header_widget.dart';
 
 class CategoryListWidget extends ConsumerStatefulWidget {
-  const CategoryListWidget({super.key});
+  const CategoryListWidget({required this.navigateToCategory, super.key});
+
+  final Function(CategoryViewModel categoryVM) navigateToCategory;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -60,18 +61,13 @@ class _CategoryListWidgetState extends ConsumerState<CategoryListWidget> {
                       crossAxisSpacing: 8),
                   itemCount: data.value.length,
                   itemBuilder: (BuildContext context, int index) => InkWell(
-                    child: InkWell(
-                        onTap: () => Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (context) => ProviderScope(overrides: [
-                                      categoryItemProvider
-                                          .overrideWithValue(data.value[index])
-                                    ], child: const InnerCategoryScreen()))),
-                        child: ProviderScope(overrides: [
-                          categoryItemProvider
-                              .overrideWithValue(data.value[index])
-                        ], child: const CategoryListItemWidget())),
-                  ),
+                      child: InkWell(
+                          onTap: () =>
+                              widget.navigateToCategory(data.value[index]),
+                          child: ProviderScope(overrides: [
+                            categoryItemProvider
+                                .overrideWithValue(data.value[index])
+                          ], child: const CategoryListItemWidget()))),
                 ),
             loading: (loading) =>
                 const Center(child: CircularProgressIndicator.adaptive()),

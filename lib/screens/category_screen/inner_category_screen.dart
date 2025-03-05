@@ -1,11 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:test_store_app/screens/category_screen/components/inner_category_content.dart';
+import 'package:test_store_app/screens/category_screen/models/category_view_model.dart';
+import 'package:test_store_app/screens/category_screen/models/product_view_model.dart';
+import 'package:test_store_app/screens/category_screen/providers/category_item_provider.dart';
+import 'package:test_store_app/screens/navigation/provider/go_router_provider.dart';
+import 'package:test_store_app/screens/navigation/route_names.dart';
 import 'package:test_store_app/screens/widgets/header_widget.dart';
 
 class InnerCategoryScreen extends ConsumerStatefulWidget {
-  const InnerCategoryScreen({super.key});
+  const InnerCategoryScreen({
+    required this.categoryViewModel,
+    super.key,
+  });
 
+  final CategoryViewModel categoryViewModel;
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
       _InnerCategoryScreenState();
@@ -35,6 +45,17 @@ class _InnerCategoryScreenState extends ConsumerState<InnerCategoryScreen> {
                 ),
               ],
             )),
-        body: const InnerCategoryContent());
+        body: ProviderScope(
+            overrides: [
+              categoryItemProvider.overrideWithValue(widget.categoryViewModel)
+            ],
+            child: InnerCategoryContent(
+                navigateToProductDetails: _navigateToProductDetails)));
+  }
+
+  void _navigateToProductDetails(ProductViewModel product) {
+    ref
+        .read(routerProvider)
+        .goNamed(RouteNames.categoryProduct, extra: product);
   }
 }

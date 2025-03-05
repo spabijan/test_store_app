@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:test_store_app/model/services/manage_http_response.dart';
 import 'package:test_store_app/screens/category_screen/components/product_item_widget.dart';
+import 'package:test_store_app/screens/category_screen/models/product_view_model.dart';
 import 'package:test_store_app/screens/category_screen/providers/popular_products_provider.dart';
 import 'package:test_store_app/screens/category_screen/providers/product_item_provider.dart';
 import 'package:test_store_app/screens/widgets/section_header_widget.dart';
 
 class PopularProductsListWidget extends ConsumerStatefulWidget {
-  const PopularProductsListWidget({super.key});
+  const PopularProductsListWidget({required this.navigateToProduct, super.key});
+
+  final Function(ProductViewModel productVM) navigateToProduct;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -57,9 +60,15 @@ class _PopularProductsListWidgetState
                   scrollDirection: Axis.horizontal,
                   itemCount: data.value.length,
                   itemBuilder: (context, index) {
-                    return ProviderScope(overrides: [
-                      productItemProvider.overrideWithValue(data.value[index])
-                    ], child: const ProductItemWidget());
+                    return ProviderScope(
+                        overrides: [
+                          productItemProvider
+                              .overrideWithValue(data.value[index])
+                        ],
+                        child: InkWell(
+                            onTap: () =>
+                                widget.navigateToProduct(data.value[index]),
+                            child: const ProductItemWidget()));
                   },
                 ),
               ),

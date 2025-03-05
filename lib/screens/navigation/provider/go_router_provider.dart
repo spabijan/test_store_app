@@ -8,6 +8,8 @@ import 'package:test_store_app/screens/authentication/repository/providers/token
 import 'package:test_store_app/screens/cart_screen.dart';
 import 'package:test_store_app/screens/category_screen/category_screen.dart';
 import 'package:test_store_app/screens/category_screen/inner_category_screen.dart';
+import 'package:test_store_app/screens/category_screen/models/category_view_model.dart';
+import 'package:test_store_app/screens/category_screen/models/product_view_model.dart';
 import 'package:test_store_app/screens/category_screen/product_detial_screen.dart';
 import 'package:test_store_app/screens/favorite_screen.dart';
 import 'package:test_store_app/screens/home_screen.dart';
@@ -36,55 +38,67 @@ GoRouter router(Ref ref) {
             _isInAuthenticationRoute(state.matchedLocation);
 
         if (isInAuthenticationRoute && _hasLoginToken(token)) {
-          return '/${RouteNames.home}';
+          return '/home';
         }
         if (!isInAuthenticationRoute && !_hasLoginToken(token)) {
-          return '/${RouteNames.signin}';
+          return '/signin';
         }
         return null;
       },
-      initialLocation: '/${RouteNames.signin}',
+      initialLocation: '/signin',
       routes: [
         GoRoute(
-          path: '/${RouteNames.signin}',
+          path: '/signin',
           name: RouteNames.signin,
           builder: (context, state) => const LoginScreen(),
         ),
         GoRoute(
-          path: '/${RouteNames.signup}',
+          path: '/signup',
           name: RouteNames.signup,
           builder: (context, state) => const RegisterScreen(),
         ),
         GoRoute(
-          path: '/${RouteNames.home}',
-          name: RouteNames.home,
-          pageBuilder: (context, state) =>
-              const NoTransitionPage(child: HomeScreen()),
-        ),
+            path: '/home',
+            name: RouteNames.home,
+            pageBuilder: (context, state) =>
+                const NoTransitionPage(child: HomeScreen()),
+            routes: [
+              GoRoute(
+                  path: '/category',
+                  name: RouteNames.dashboardCategory,
+                  builder: (context, state) {
+                    CategoryViewModel model = state.extra as CategoryViewModel;
+                    return InnerCategoryScreen(categoryViewModel: model);
+                  },
+                  routes: [
+                    GoRoute(
+                        path: '/product',
+                        name: RouteNames.categoryProduct,
+                        builder: (context, state) {
+                          ProductViewModel model =
+                              state.extra as ProductViewModel;
+                          return ProductDetailScreen(viewModel: model);
+                        })
+                  ]),
+              GoRoute(
+                  path: '/product',
+                  name: RouteNames.dashboardProduct,
+                  builder: (context, state) {
+                    ProductViewModel model = state.extra as ProductViewModel;
+                    return ProductDetailScreen(viewModel: model);
+                  })
+            ]),
         GoRoute(
-          path: '/${RouteNames.favourites}',
+          path: '/favourites',
           name: RouteNames.favourites,
           pageBuilder: (context, state) =>
               const NoTransitionPage(child: FavoriteScreen()),
         ),
         GoRoute(
-          path: '/${RouteNames.category}',
+          path: '/category',
           name: RouteNames.category,
           pageBuilder: (context, state) =>
               const NoTransitionPage(child: CategoryScreen()),
-          routes: [
-            GoRoute(
-                path: '/${RouteNames.categoryDetails}',
-                name: RouteNames.categoryDetails,
-                builder: (context, state) => const InnerCategoryScreen(),
-                routes: [
-                  GoRoute(
-                    path: '/${RouteNames.productDetails}',
-                    name: RouteNames.productDetails,
-                    builder: (_, __) => const ProductDetailScreen(),
-                  )
-                ])
-          ],
         ),
         GoRoute(
           path: '/${RouteNames.stores}',
