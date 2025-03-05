@@ -126,7 +126,7 @@ class ProductDetailScreen extends ConsumerWidget {
             padding: const EdgeInsets.only(bottom: 32),
             child: InkWell(
               onTap: () {
-                _addToCart(ref);
+                _addToCart(context, ref);
               },
               child: Container(
                 width: 386,
@@ -146,8 +146,8 @@ class ProductDetailScreen extends ConsumerWidget {
             )));
   }
 
-  void _addToCart(WidgetRef ref) {
-    return ref.read(cartProvider.notifier).addProductToCart(CartModel(
+  void _addToCart(BuildContext context, WidgetRef ref) {
+    ref.read(cartProvider.notifier).addProductToCart(CartModel(
         productName: viewModel.productName,
         productPrice: viewModel.productPrice,
         category: viewModel.category,
@@ -158,5 +158,8 @@ class ProductDetailScreen extends ConsumerWidget {
         productId: viewModel.productId,
         description: viewModel.description,
         vendorFullName: viewModel.vendorFullName));
+
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Added ${viewModel.productName} to cart')));
   }
 }

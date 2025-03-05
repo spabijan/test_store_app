@@ -1,4 +1,3 @@
-import 'package:decimal/decimal.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:test_store_app/model/models/cart/cart_model.dart';
 

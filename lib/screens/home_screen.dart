@@ -7,6 +7,7 @@ import 'package:test_store_app/screens/components/banner/banners_list_widget.dar
 import 'package:test_store_app/screens/category_screen/components/category_list_widget.dart';
 import 'package:test_store_app/screens/navigation/navigation_tapbar.dart';
 import 'package:test_store_app/screens/navigation/provider/go_router_provider.dart';
+import 'package:test_store_app/screens/navigation/provider/navigation_providers.dart';
 import 'package:test_store_app/screens/navigation/route_names.dart';
 import 'package:test_store_app/screens/widgets/header_widget.dart';
 
@@ -36,14 +37,16 @@ class HomeScreen extends ConsumerWidget {
   }
 
   void _gotoCategoryDetails(WidgetRef ref, CategoryViewModel category) {
+    ref.read(selectedCategoryProvider.notifier).state = category;
     ref
-        .watch(routerProvider)
+        .read(routerProvider)
         .goNamed(RouteNames.dashboardCategory, extra: category);
   }
 
   void _gotoProductDetails(WidgetRef ref, ProductViewModel product) {
+    ref.read(selectedProductProvider.notifier).state = product;
     ref
-        .watch(routerProvider)
+        .read(routerProvider)
         .goNamed(RouteNames.dashboardProduct, extra: product);
   }
 }

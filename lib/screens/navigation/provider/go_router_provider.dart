@@ -5,14 +5,13 @@ import 'package:test_store_app/screens/account_screen.dart';
 import 'package:test_store_app/screens/authentication/create_account/register_screen.dart';
 import 'package:test_store_app/screens/authentication/login/login_screen.dart';
 import 'package:test_store_app/screens/authentication/repository/providers/token_repository_provider.dart';
-import 'package:test_store_app/screens/cart_screen.dart';
+import 'package:test_store_app/screens/cart_screen/cart_screen.dart';
 import 'package:test_store_app/screens/category_screen/category_screen.dart';
 import 'package:test_store_app/screens/category_screen/inner_category_screen.dart';
-import 'package:test_store_app/screens/category_screen/models/category_view_model.dart';
-import 'package:test_store_app/screens/category_screen/models/product_view_model.dart';
 import 'package:test_store_app/screens/category_screen/product_detial_screen.dart';
 import 'package:test_store_app/screens/favorite_screen.dart';
 import 'package:test_store_app/screens/home_screen.dart';
+import 'package:test_store_app/screens/navigation/provider/navigation_providers.dart';
 import 'package:test_store_app/screens/navigation/route_names.dart';
 import 'package:test_store_app/screens/stores_screen.dart';
 
@@ -67,25 +66,24 @@ GoRouter router(Ref ref) {
                   path: '/category',
                   name: RouteNames.dashboardCategory,
                   builder: (context, state) {
-                    CategoryViewModel model = state.extra as CategoryViewModel;
-                    return InnerCategoryScreen(categoryViewModel: model);
+                    final category = ref.read(selectedCategoryProvider);
+                    return InnerCategoryScreen(categoryViewModel: category!);
                   },
                   routes: [
                     GoRoute(
                         path: '/product',
                         name: RouteNames.categoryProduct,
                         builder: (context, state) {
-                          ProductViewModel model =
-                              state.extra as ProductViewModel;
-                          return ProductDetailScreen(viewModel: model);
+                          final model = ref.read(selectedProductProvider);
+                          return ProductDetailScreen(viewModel: model!);
                         })
                   ]),
               GoRoute(
                   path: '/product',
                   name: RouteNames.dashboardProduct,
                   builder: (context, state) {
-                    ProductViewModel model = state.extra as ProductViewModel;
-                    return ProductDetailScreen(viewModel: model);
+                    final model = ref.read(selectedProductProvider);
+                    return ProductDetailScreen(viewModel: model!);
                   })
             ]),
         GoRoute(
