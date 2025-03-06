@@ -6,6 +6,7 @@ import 'package:test_store_app/screens/authentication/create_account/register_sc
 import 'package:test_store_app/screens/authentication/login/login_screen.dart';
 import 'package:test_store_app/screens/authentication/repository/providers/token_repository_provider.dart';
 import 'package:test_store_app/screens/cart_screen/cart_screen.dart';
+import 'package:test_store_app/screens/cart_screen/checkout_screen.dart';
 import 'package:test_store_app/screens/category_screen/category_screen.dart';
 import 'package:test_store_app/screens/category_screen/inner_category_screen.dart';
 import 'package:test_store_app/screens/category_screen/product_detial_screen.dart';
@@ -105,11 +106,16 @@ GoRouter router(Ref ref) {
               const NoTransitionPage(child: StoresScreen()),
         ),
         GoRoute(
-          path: '/${RouteNames.cart}',
-          name: RouteNames.cart,
-          pageBuilder: (context, state) =>
-              const NoTransitionPage(child: CartScreen()),
-        ),
+            path: '/cart',
+            name: RouteNames.cart,
+            pageBuilder: (context, state) =>
+                const NoTransitionPage(child: CartScreen()),
+            routes: [
+              GoRoute(
+                  path: '/checout',
+                  name: RouteNames.cartCheckout,
+                  builder: (context, state) => const CheckoutScreen())
+            ]),
         GoRoute(
           path: '/${RouteNames.account}',
           name: RouteNames.account,
