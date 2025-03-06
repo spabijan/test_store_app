@@ -2,10 +2,10 @@ import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:test_store_app/model/models/cart/provider/cart_total_amount.dart';
+import 'package:test_store_app/screens/cart_screen/models/cart/provider/cart_total_amount.dart';
 
-class CartCheckoutButton extends StatelessWidget {
-  const CartCheckoutButton({
+class CartCheckupButton extends StatelessWidget {
+  const CartCheckupButton({
     required this.gotoCheckout,
     super.key,
   });

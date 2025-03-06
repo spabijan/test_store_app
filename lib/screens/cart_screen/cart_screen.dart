@@ -3,12 +3,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:test_store_app/model/models/cart/cart_model.dart';
-import 'package:test_store_app/model/models/cart/provider/cart_provider.dart';
-import 'package:test_store_app/model/models/cart/provider/cart_total_amount.dart';
+import 'package:test_store_app/screens/cart_screen/models/cart/cart_model.dart';
+import 'package:test_store_app/screens/cart_screen/models/cart/provider/cart_provider.dart';
+import 'package:test_store_app/screens/cart_screen/models/cart/provider/cart_total_amount.dart';
 import 'package:test_store_app/r.dart';
 import 'package:test_store_app/screens/cart_screen/providers/cart_list_item_provider.dart';
-import 'package:test_store_app/screens/cart_screen/widgets/cart_checkout_button.dart';
+import 'package:test_store_app/screens/cart_screen/widgets/cart_goto_checkup_button.dart';
 import 'package:test_store_app/screens/cart_screen/widgets/cart_info_icon.dart';
 import 'package:test_store_app/screens/cart_screen/widgets/cart_items_widget.dart';
 import 'package:test_store_app/screens/cart_screen/widgets/cart_list_item.dart';
@@ -71,7 +71,7 @@ class CartScreen extends StatelessWidget {
       ),
       bottomSheet: Consumer(
         builder: (_, WidgetRef ref, __) {
-          return CartCheckoutButton(gotoCheckout: () => _gotoCheckup(ref));
+          return CartCheckupButton(gotoCheckout: () => _gotoCheckup(ref));
         },
       ),
       bottomNavigationBar: NavigationTapBar(),

@@ -1,7 +1,7 @@
 import 'package:decimal/decimal.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:test_store_app/model/models/cart/provider/cart_provider.dart';
+import 'package:test_store_app/screens/cart_screen/models/cart/provider/cart_provider.dart';
 
 part 'cart_total_amount.g.dart';
 

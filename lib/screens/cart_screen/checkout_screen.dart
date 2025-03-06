@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:test_store_app/model/models/cart/cart_model.dart';
-import 'package:test_store_app/model/models/cart/provider/cart_provider.dart';
-import 'package:test_store_app/model/models/cart/provider/cart_total_amount.dart';
+import 'package:test_store_app/screens/cart_screen/models/cart/cart_model.dart';
+import 'package:test_store_app/screens/cart_screen/models/cart/provider/cart_provider.dart';
+import 'package:test_store_app/screens/cart_screen/models/cart/provider/cart_total_amount.dart';
+import 'package:test_store_app/screens/cart_screen/constants/payment_types.dart';
+import 'package:test_store_app/screens/cart_screen/providers/place_order_provider.dart';
 import 'package:test_store_app/screens/cart_screen/providers/selected_payment_method_provider.dart';
 import 'package:test_store_app/screens/cart_screen/widgets/cart_chekout_list_row.dart';
 import 'package:test_store_app/screens/cart_screen/widgets/cart_payment_method_widget.dart';
@@ -53,26 +55,46 @@ class CheckoutScreen extends StatelessWidget {
           ),
         ),
       ),
-      bottomSheet: Padding(
-        padding: const EdgeInsets.only(bottom: 42, top: 8, left: 8, right: 8),
-        child: Container(
-          width: 338,
-          height: 58,
-          decoration: BoxDecoration(
-              color: const Color(0xff3854ee),
-              borderRadius: BorderRadius.circular(15)),
-          child: Center(
-            child: Consumer(
-              builder: (_, WidgetRef ref, __) {
-                final buttonText = ref.watch(selectedPaymentMethodProvider);
-                return Text(buttonText.checkoutMessage,
-                    style: GoogleFonts.montserrat(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18));
-              },
-            ),
-          ),
+      bottomSheet: const Padding(
+        padding: EdgeInsets.only(bottom: 42, top: 8, left: 8, right: 8),
+        child: GotoPaymentButton(),
+      ),
+    );
+  }
+}
+
+class GotoPaymentButton extends ConsumerWidget {
+  const GotoPaymentButton({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final paymentType = ref.watch(selectedPaymentMethodProvider);
+    final cart = ref.watch(cartProvider);
+    return InkWell(
+      onTap: () async {
+        switch (paymentType) {
+          case PaymentTypes.stripe:
+            throw UnimplementedError();
+          case PaymentTypes.cash:
+            ref
+                .read(placeOrderProvider.notifier)
+                .placeOrder(cart.values.toList());
+        }
+      },
+      child: Container(
+        width: 338,
+        height: 58,
+        decoration: BoxDecoration(
+            color: const Color(0xff3854ee),
+            borderRadius: BorderRadius.circular(15)),
+        child: Center(
+          child: Text(paymentType.checkoutMessage,
+              style: GoogleFonts.montserrat(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18)),
         ),
       ),
     );

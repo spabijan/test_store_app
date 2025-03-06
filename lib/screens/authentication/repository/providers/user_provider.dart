@@ -12,8 +12,6 @@ class UserState extends _$UserState {
     return const User(fullName: '', email: '', password: '');
   }
 
-  User? get currentUser => state;
-
   void setCurrentUser(String userJson) =>
       state = User.fromJson(json.decode(userJson));
 
