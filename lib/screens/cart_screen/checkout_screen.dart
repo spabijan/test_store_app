@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:test_store_app/screens/cart_screen/models/cart/cart_model.dart';
 import 'package:test_store_app/screens/cart_screen/models/cart/provider/cart_provider.dart';
-import 'package:test_store_app/screens/cart_screen/models/cart/provider/cart_total_amount.dart';
 import 'package:test_store_app/screens/cart_screen/constants/payment_types.dart';
 import 'package:test_store_app/screens/cart_screen/providers/place_order_provider.dart';
 import 'package:test_store_app/screens/cart_screen/providers/selected_payment_method_provider.dart';

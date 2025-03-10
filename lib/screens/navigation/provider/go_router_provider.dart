@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:test_store_app/screens/account_screen.dart';
 import 'package:test_store_app/screens/authentication/create_account/register_screen.dart';
 import 'package:test_store_app/screens/authentication/login/login_screen.dart';
-import 'package:test_store_app/screens/authentication/repository/providers/token_repository_provider.dart';
+import 'package:test_store_app/screens/authentication/repository/providers/auth_state_details_provider.dart';
 import 'package:test_store_app/screens/cart_screen/cart_screen.dart';
 import 'package:test_store_app/screens/cart_screen/checkout_screen.dart';
 import 'package:test_store_app/screens/category_screen/category_screen.dart';
@@ -13,7 +13,9 @@ import 'package:test_store_app/screens/category_screen/product_detial_screen.dar
 import 'package:test_store_app/screens/favorite_screen.dart';
 import 'package:test_store_app/screens/home_screen.dart';
 import 'package:test_store_app/screens/navigation/provider/navigation_providers.dart';
+import 'package:test_store_app/screens/navigation/provider/splash_screen_ready_provider.dart';
 import 'package:test_store_app/screens/navigation/route_names.dart';
+import 'package:test_store_app/screens/navigation/splash_screen.dart';
 import 'package:test_store_app/screens/stores_screen.dart';
 
 part 'go_router_provider.g.dart';
@@ -24,29 +26,48 @@ bool _isInAuthenticationRoute(String matchedLocation) {
   return _authenticationRoutes.contains(matchedLocation);
 }
 
-bool _hasLoginToken(String? token) => token != null && token.isNotEmpty;
+bool _isInLoginRestrictedRoutes(String matchedLocation) {
+  bool notInAuth = !_isInAuthenticationRoute(matchedLocation);
+  bool notSplashScreen = (matchedLocation != '/${RouteNames.splashScreen}');
+  return !notInAuth && notSplashScreen;
+}
 
 @riverpod
 GoRouter router(Ref ref) {
-  //final authState = ref.watch(authStateProvider);
+  final isLogin = ref.watch(isLoginProvider);
   return GoRouter(
       redirect: (context, state) async {
-        //this is not reactive solution
-        //- for fully reactive check my test_vendor_app
-        final token = await ref.read(tokenRepositoryProvider).getToken();
-        final isInAuthenticationRoute =
-            _isInAuthenticationRoute(state.matchedLocation);
+        String? redirect;
+        if (_isInAuthenticationRoute(state.matchedLocation) && isLogin) {
+          redirect = '/${RouteNames.home}';
+        }
 
-        if (isInAuthenticationRoute && _hasLoginToken(token)) {
-          return '/home';
+        if (_isInLoginRestrictedRoutes(state.matchedLocation) &&
+            isLogin == false) {
+          redirect = '/${RouteNames.signin}';
         }
-        if (!isInAuthenticationRoute && !_hasLoginToken(token)) {
-          return '/signin';
-        }
-        return null;
+
+        print('state: ${state.matchedLocation}, redirect:$redirect');
+        return redirect;
       },
-      initialLocation: '/signin',
+      initialLocation: '/splashScreen',
       routes: [
+        GoRoute(
+            redirect: (context, state) {
+              String? redirect;
+              var splashReady = ref.watch(isSplashScreenReadyProvider);
+              if (splashReady) {
+                if (isLogin) {
+                  redirect = '/home';
+                } else {
+                  redirect = '/signin';
+                }
+              }
+              return redirect;
+            },
+            path: '/splashScreen',
+            name: RouteNames.splashScreen,
+            builder: (context, state) => const SplashScreen()),
         GoRoute(
           path: '/signin',
           name: RouteNames.signin,

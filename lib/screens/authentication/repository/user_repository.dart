@@ -14,7 +14,7 @@ class UserRepository {
     return value != null ? User.fromJson(json.decode(value)) : null;
   }
 
-  void setUser(String userJson) async {
+  Future<void> setUser(String userJson) async {
     FlutterSecureStorage storage = provider.read(secureStorageProvider);
     await storage.write(key: key, value: userJson);
   }

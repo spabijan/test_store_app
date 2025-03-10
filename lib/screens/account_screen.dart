@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:test_store_app/screens/authentication/logout/logout_provider.dart';
+import 'package:test_store_app/screens/authentication/repository/providers/auth_provider.dart';
 import 'package:test_store_app/screens/navigation/navigation_tapbar.dart';
 import 'package:test_store_app/screens/navigation/route_names.dart';
 import 'package:test_store_app/screens/widgets/header_widget.dart';
@@ -22,7 +22,7 @@ class AccountScreen extends ConsumerWidget {
           const Text('Account Screen'),
           ElevatedButton(
               onPressed: () {
-                ref.watch(logoutProvider.notifier).logout();
+                ref.watch(authProvider.notifier).logoutUser();
                 GoRouter.of(context).goNamed(RouteNames.signin);
               },
               child: const Text('Signout'))

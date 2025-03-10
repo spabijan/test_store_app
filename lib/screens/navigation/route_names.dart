@@ -1,5 +1,6 @@
 sealed class RouteNames {
   RouteNames._();
+  static const splashScreen = 'splashScreen';
   static const signin = 'signin';
   static const signup = 'signup';
   static const home = 'home';

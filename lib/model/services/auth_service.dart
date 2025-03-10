@@ -24,11 +24,6 @@ class AuthService {
           body: json.encode(user.toJson()),
           headers: MyGlobalVariables.headers);
       HttpResponseUtils.checkForHttpResponseErrors(response: response);
-
-      // String tokenJson = jsonDecode(response.body)['token'];
-      // final userJson = jsonEncode(jsonDecode(response.body)['user']);
-
-      // return AuthResult(userJson: userJson, tokenJson: tokenJson);
     } catch (e) {
       rethrow;
     }

@@ -1,10 +1,7 @@
-import 'dart:math';
-
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:test_store_app/screens/authentication/repository/providers/user_provider.dart';
+import 'package:test_store_app/screens/authentication/repository/providers/auth_state_details_provider.dart';
 import 'package:test_store_app/screens/cart_screen/models/cart/cart_model.dart';
 import 'package:test_store_app/model/services/providers/orders_service_provider.dart';
-import 'package:test_store_app/screens/cart_screen/models/cart/provider/cart_provider.dart';
 
 part 'place_order_provider.g.dart';
 
@@ -21,7 +18,7 @@ class PlaceOrder extends _$PlaceOrder {
   void placeOrder(List<CartModel> cart) async {
     state = const AsyncLoading();
     final service = ref.watch(ordersServiceProvider);
-    final user = ref.watch(userStateProvider)!;
+    final user = ref.watch(loggedUserProvider)!;
     final key = _key;
 
     final newState = await AsyncValue.guard(() async {

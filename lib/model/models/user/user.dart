@@ -8,7 +8,7 @@ class User with _$User {
   const factory User(
       {required String fullName,
       required String email,
-      required String password,
+      @Default('/****************/') String password,
       @JsonKey(name: '_id') @Default('') String id,
       @Default('') String state,
       @Default('') String city,

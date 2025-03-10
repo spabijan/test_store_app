@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:test_store_app/constants/my_colors.dart';
-import 'package:test_store_app/screens/authentication/login/providers/signin_provider.dart';
+import 'package:test_store_app/screens/authentication/repository/providers/auth_provider.dart';
 import 'package:test_store_app/r.dart';
 import 'package:test_store_app/screens/navigation/route_names.dart';
 import 'package:test_store_app/model/services/manage_http_response.dart';
@@ -34,13 +34,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
 
     ref
-        .read(signinProvider.notifier)
-        .signinUser(email: email, password: password);
+        .read(authProvider.notifier)
+        .signInUser(email: email, password: password);
   }
 
   @override
   Widget build(BuildContext context) {
-    ref.listen<AsyncValue<void>>(signinProvider, (previous, next) {
+    ref.listen<AsyncValue<void>>(authProvider, (previous, next) {
       next.whenOrNull(error: (error, stackTrace) {
         if (error is HttpError) {
           ScaffoldMessenger.of(context)
@@ -53,7 +53,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       next.whenData((value) => GoRouter.of(context).goNamed(RouteNames.home));
     });
 
-    final signinState = ref.watch(signinProvider);
+    final signinState = ref.watch(authProvider);
 
     return Scaffold(
       backgroundColor: Colors.white.withValues(alpha: 0.95),
