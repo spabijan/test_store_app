@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:test_store_app/screens/authentication/repository/providers/auth_state_details_provider.dart';
 
 class DeliveryAddressTileWidget extends StatelessWidget {
-  const DeliveryAddressTileWidget({
-    super.key,
-  });
+  const DeliveryAddressTileWidget(
+      {required this.navigateToAddressScreen, super.key});
+
+  final VoidCallback navigateToAddressScreen;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: navigateToAddressScreen,
       child: SizedBox(
         width: 335,
         height: 74,
@@ -47,49 +50,56 @@ class DeliveryAddressTileWidget extends StatelessWidget {
                       left: -1,
                       child: SizedBox(
                         width: 219,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Align(
-                              alignment: Alignment.centerLeft,
-                              child: SizedBox(
-                                width: 114,
-                                child: Text(
-                                  'Add Adress',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                    height: 1.1,
+                        child: Consumer(
+                          builder: (_, WidgetRef ref, __) {
+                            final user = ref.watch(loggedUserProvider);
+                            return Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: SizedBox(
+                                    width: 114,
+                                    child: Text(
+                                      user == null
+                                          ? 'Add address'
+                                          : 'Contact data',
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                        height: 1.1,
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 4,
-                            ),
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                'United state',
-                                style: GoogleFonts.lato(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 1.3,
+                                const SizedBox(
+                                  height: 4,
                                 ),
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                'Enter city',
-                                style: GoogleFonts.lato(
-                                  color: const Color(0xFF7F808C),
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 12,
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    user?.state ?? '',
+                                    style: GoogleFonts.lato(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 1.3,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            )
-                          ],
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    user?.city ?? '',
+                                    style: GoogleFonts.lato(
+                                      color: const Color(0xFF7F808C),
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                )
+                              ],
+                            );
+                          },
                         ),
                       ),
                     )

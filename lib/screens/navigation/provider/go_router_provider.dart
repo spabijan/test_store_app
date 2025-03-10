@@ -7,6 +7,7 @@ import 'package:test_store_app/screens/authentication/login/login_screen.dart';
 import 'package:test_store_app/screens/authentication/repository/providers/auth_state_details_provider.dart';
 import 'package:test_store_app/screens/cart_screen/cart_screen.dart';
 import 'package:test_store_app/screens/cart_screen/checkout_screen.dart';
+import 'package:test_store_app/screens/cart_screen/shipping_address_screen.dart';
 import 'package:test_store_app/screens/category_screen/category_screen.dart';
 import 'package:test_store_app/screens/category_screen/inner_category_screen.dart';
 import 'package:test_store_app/screens/category_screen/product_detial_screen.dart';
@@ -46,8 +47,6 @@ GoRouter router(Ref ref) {
             isLogin == false) {
           redirect = '/${RouteNames.signin}';
         }
-
-        print('state: ${state.matchedLocation}, redirect:$redirect');
         return redirect;
       },
       initialLocation: '/splashScreen',
@@ -135,7 +134,14 @@ GoRouter router(Ref ref) {
               GoRoute(
                   path: '/checout',
                   name: RouteNames.cartCheckout,
-                  builder: (context, state) => const CheckoutScreen())
+                  builder: (context, state) => const CheckoutScreen(),
+                  routes: [
+                    GoRoute(
+                        path: '/shippingAddress',
+                        name: RouteNames.cartShippingAddress,
+                        builder: (context, state) =>
+                            const ShippingAddressScreen())
+                  ])
             ]),
         GoRoute(
           path: '/${RouteNames.account}',

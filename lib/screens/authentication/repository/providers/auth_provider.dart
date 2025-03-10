@@ -71,4 +71,26 @@ class Auth extends _$Auth {
       return AuthState(tokenJson: null, user: null);
     });
   }
+
+  void updateAddressData(
+      {required String id,
+      required String city,
+      required String state,
+      required String locality}) async {
+    this.state = const AsyncLoading();
+    this.state = await AsyncValue.guard(() async {
+      final updatedUserJson = await ref
+          .read(authServiceProvider)
+          .updateUserAddress(
+              id: id, city: city, state: state, locality: locality);
+
+      await ref.read(userRepositoryProvider).setUser(updatedUserJson);
+      final tokenRepository = ref.watch(tokenRepositoryProvider);
+
+      final token = await tokenRepository.getToken();
+
+      return AuthState(
+          tokenJson: token, user: User.fromJson(json.decode(updatedUserJson)));
+    });
+  }
 }
