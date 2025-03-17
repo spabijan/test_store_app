@@ -41,7 +41,6 @@ linter:
     unnecessary_parenthesis: true
     use_named_constants: true
     use_string_buffers: true
-    lines_longer_than_80_chars: true
     eol_at_end_of_file: true
     flutter_style_todos: true
     await_only_futures: true

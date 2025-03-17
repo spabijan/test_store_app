@@ -16,23 +16,37 @@ class ShippingAddressScreen extends ConsumerStatefulWidget {
 
 class _ShippingAddressScreen extends ConsumerState<ShippingAddressScreen> {
   final GlobalKey<FormState> formKey = GlobalKey();
-  final stateController = TextEditingController();
-  final cityController = TextEditingController();
-  final localityController = TextEditingController();
+  final _stateController = TextEditingController();
+  final _cityController = TextEditingController();
+  final _localityController = TextEditingController();
 
   @override
   void dispose() {
-    stateController.dispose();
-    cityController.dispose();
-    localityController.dispose();
+    _stateController.dispose();
+    _cityController.dispose();
+    _localityController.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // read only on on start
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final user = ref.read(loggedUserProvider);
+      if (user != null) {
+        _stateController.text = user.state;
+        _cityController.text = user.city;
+        _localityController.text = user.locality;
+      }
+    });
   }
 
   void _updateShippingAddress() {
     if (formKey.currentState!.validate()) {
-      final state = stateController.text.trim();
-      final city = cityController.text.trim();
-      final locality = localityController.text.trim();
+      final state = _stateController.text.trim();
+      final city = _cityController.text.trim();
+      final locality = _localityController.text.trim();
       final id = ref.read(loggedUserProvider)!.id;
       ref.read(authProvider.notifier).updateAddressData(
           id: id, city: city, state: state, locality: locality);
@@ -86,7 +100,7 @@ class _ShippingAddressScreen extends ConsumerState<ShippingAddressScreen> {
                       }
                       return null;
                     },
-                    controller: stateController,
+                    controller: _stateController,
                     decoration: const InputDecoration(labelText: 'State')),
                 const SizedBox(height: 8),
                 TextFormField(
@@ -96,7 +110,7 @@ class _ShippingAddressScreen extends ConsumerState<ShippingAddressScreen> {
                       }
                       return null;
                     },
-                    controller: cityController,
+                    controller: _cityController,
                     decoration: const InputDecoration(labelText: 'City')),
                 const SizedBox(height: 8),
                 TextFormField(
@@ -106,7 +120,7 @@ class _ShippingAddressScreen extends ConsumerState<ShippingAddressScreen> {
                       }
                       return null;
                     },
-                    controller: localityController,
+                    controller: _localityController,
                     decoration: const InputDecoration(labelText: 'Locality')),
                 const SizedBox(height: 8),
               ],

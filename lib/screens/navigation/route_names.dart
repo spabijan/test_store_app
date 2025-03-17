@@ -16,4 +16,5 @@ sealed class RouteNames {
   static const cartCheckout = 'cart/checkout';
   static const cartShippingAddress = 'cart/checkout/shippingAddress';
   static const account = 'account';
+  static const accountOrders = 'account/orders';
 }

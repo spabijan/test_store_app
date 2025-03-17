@@ -11,7 +11,7 @@ class PopularProducts extends _$PopularProducts {
   FutureOr<List<ProductViewModel>> build() {
     _key = Object();
     ref.onDispose(() => _key = null);
-    return List.empty();
+    return _loadPopularProducts();
   }
 
   void loadPopularProducts() async {
@@ -19,16 +19,19 @@ class PopularProducts extends _$PopularProducts {
     final key = _key;
 
     final newState = await AsyncValue.guard(() async {
-      var products =
-          await ref.read(productRepositoryProvider).loadPopularProducts();
-      return [
-        for (final category in products)
-          ProductViewModel(productModel: category)
-      ];
+      return _loadPopularProducts();
     });
 
     if (key == _key) {
       state = newState;
     }
+  }
+
+  Future<List<ProductViewModel>> _loadPopularProducts() async {
+    var products =
+        await ref.read(productRepositoryProvider).loadPopularProducts();
+    return [
+      for (final category in products) ProductViewModel(productModel: category)
+    ];
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:test_store_app/constants/my_global_variables.dart';
 import 'package:test_store_app/model/models/order/order.dart';
 import 'package:http/http.dart' as http;
@@ -18,24 +20,42 @@ class OrdersService {
     required String state,
     required String locality,
   }) async {
-    final order = OrderModel(
-        fullName: fullName,
-        email: email,
-        productName: productName,
-        productPrice: productPrice,
-        quantity: quantity,
-        category: category,
-        image: image,
-        buyerId: buyerId,
-        vendorId: vendorId,
-        city: city,
-        state: state,
-        locality: locality);
+    try {
+      final order = OrderModel(
+          fullName: fullName,
+          email: email,
+          productName: productName,
+          productPrice: productPrice,
+          quantity: quantity,
+          category: category,
+          image: image,
+          buyerId: buyerId,
+          vendorId: vendorId,
+          city: city,
+          state: state,
+          locality: locality);
 
-    var response = await http.post(
-        Uri.parse('${MyGlobalVariables.uri}/api/orders'),
-        headers: MyGlobalVariables.headers,
-        body: order);
-    HttpResponseUtils.checkForHttpResponseErrors(response: response);
+      var response = await http.post(
+          Uri.parse('${MyGlobalVariables.uri}/api/orders'),
+          headers: MyGlobalVariables.headers,
+          body: jsonEncode(order.toJson()));
+      HttpResponseUtils.checkForHttpResponseErrors(response: response);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<List<OrderModel>> getOrderById({required String buyerID}) async {
+    try {
+      var response = await http.get(
+          Uri.parse('${MyGlobalVariables.uri}/api/orders/$buyerID'),
+          headers: MyGlobalVariables.headers);
+
+      HttpResponseUtils.checkForHttpResponseErrors(response: response);
+      List<dynamic> data = jsonDecode(response.body);
+      return [for (final datum in data) OrderModel.fromJson(datum)];
+    } catch (e) {
+      rethrow;
+    }
   }
 }

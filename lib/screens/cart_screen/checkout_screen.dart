@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:test_store_app/model/models/user/user_methods.dart';
+import 'package:test_store_app/model/services/manage_http_response.dart';
 import 'package:test_store_app/screens/authentication/repository/providers/auth_state_details_provider.dart';
-import 'package:test_store_app/screens/cart_screen/models/cart/cart_model.dart';
 import 'package:test_store_app/screens/cart_screen/models/cart/provider/cart_provider.dart';
 import 'package:test_store_app/screens/cart_screen/constants/payment_types.dart';
 import 'package:test_store_app/screens/cart_screen/providers/place_order_provider.dart';
@@ -15,11 +15,29 @@ import 'package:test_store_app/screens/cart_screen/widgets/cart_payment_method_w
 import 'package:test_store_app/screens/cart_screen/widgets/delivery_address_tile.dart';
 import 'package:test_store_app/screens/navigation/route_names.dart';
 
-class CheckoutScreen extends StatelessWidget {
+class CheckoutScreen extends ConsumerWidget {
   const CheckoutScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen<AsyncValue<void>>(placeOrderProvider, (previous, next) {
+      next.whenOrNull(error: (error, stackTrace) {
+        if (error is HttpError) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text(error.message)));
+        } else {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text(error.toString())));
+        }
+      });
+      next.whenData((value) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Successfully placed order')));
+        ref.watch(cartProvider.notifier).clearCart();
+        Navigator.of(context).pop();
+      });
+    });
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Checkout'),

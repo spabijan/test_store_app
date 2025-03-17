@@ -7,35 +7,13 @@ import 'package:test_store_app/screens/category_screen/providers/popular_product
 import 'package:test_store_app/screens/category_screen/providers/product_item_provider.dart';
 import 'package:test_store_app/screens/widgets/section_header_widget.dart';
 
-class PopularProductsListWidget extends ConsumerStatefulWidget {
+class PopularProductsListWidget extends ConsumerWidget {
   const PopularProductsListWidget({required this.navigateToProduct, super.key});
 
   final Function(ProductViewModel productVM) navigateToProduct;
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _PopularProductsListWidgetState();
-}
-
-class _PopularProductsListWidgetState
-    extends ConsumerState<PopularProductsListWidget> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) => ref.read(popularProductsProvider).whenData(
-              (value) {
-                if (value.isEmpty) {
-                  ref
-                      .read(popularProductsProvider.notifier)
-                      .loadPopularProducts();
-                }
-              },
-            ));
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     ref.listen(
         popularProductsProvider,
         (previous, next) => next.whenOrNull<AsyncValue<List<PopularProducts>>>(
@@ -66,8 +44,7 @@ class _PopularProductsListWidgetState
                               .overrideWithValue(data.value[index])
                         ],
                         child: InkWell(
-                            onTap: () =>
-                                widget.navigateToProduct(data.value[index]),
+                            onTap: () => navigateToProduct(data.value[index]),
                             child: const ProductItemWidget()));
                   },
                 ),

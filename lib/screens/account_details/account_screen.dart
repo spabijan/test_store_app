@@ -22,6 +22,11 @@ class AccountScreen extends ConsumerWidget {
           const Text('Account Screen'),
           ElevatedButton(
               onPressed: () {
+                GoRouter.of(context).goNamed(RouteNames.accountOrders);
+              },
+              child: const Text('Your orders')),
+          ElevatedButton(
+              onPressed: () {
                 ref.watch(authProvider.notifier).logoutUser();
                 GoRouter.of(context).goNamed(RouteNames.signin);
               },

@@ -68,4 +68,8 @@ class Cart extends _$Cart {
       state = newState;
     }
   }
+
+  void clearCart() {
+    state = {};
+  }
 }

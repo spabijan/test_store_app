@@ -1,7 +1,8 @@
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:test_store_app/screens/account_screen.dart';
+import 'package:test_store_app/screens/account_details/account_screen.dart';
+import 'package:test_store_app/screens/account_details/order_screen.dart';
 import 'package:test_store_app/screens/authentication/create_account/register_screen.dart';
 import 'package:test_store_app/screens/authentication/login/login_screen.dart';
 import 'package:test_store_app/screens/authentication/repository/providers/auth_state_details_provider.dart';
@@ -144,10 +145,16 @@ GoRouter router(Ref ref) {
                   ])
             ]),
         GoRoute(
-          path: '/${RouteNames.account}',
-          name: RouteNames.account,
-          pageBuilder: (context, state) =>
-              const NoTransitionPage(child: AccountScreen()),
-        ),
+            path: '/${RouteNames.account}',
+            name: RouteNames.account,
+            pageBuilder: (context, state) =>
+                const NoTransitionPage(child: AccountScreen()),
+            routes: [
+              GoRoute(
+                path: '/orders',
+                name: RouteNames.accountOrders,
+                builder: (context, state) => const OrderScreen(),
+              )
+            ]),
       ]);
 }

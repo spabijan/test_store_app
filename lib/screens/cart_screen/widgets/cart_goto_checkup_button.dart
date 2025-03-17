@@ -5,11 +5,13 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:test_store_app/screens/cart_screen/models/cart/provider/cart_total_amount.dart';
 
 class CartCheckupButton extends StatelessWidget {
-  const CartCheckupButton({
+  CartCheckupButton({
     required this.gotoCheckout,
+    this.isEnabled = true,
     super.key,
   });
 
+  bool isEnabled;
   final Function gotoCheckout;
 
   @override
@@ -56,13 +58,19 @@ class CartCheckupButton extends StatelessWidget {
               alignment: const Alignment(0.83, -1),
               child: InkWell(
                 // ignore: unnecessary_lambdas
-                onTap: () => gotoCheckout(),
+                onTap: () {
+                  if (isEnabled) {
+                    gotoCheckout();
+                  }
+                },
                 child: Container(
                   width: 166,
                   height: 77,
                   clipBehavior: Clip.hardEdge,
                   decoration: BoxDecoration(
-                      color: const Color(0xff1532e7),
+                      color: isEnabled
+                          ? const Color(0xff1532e7)
+                          : Colors.blueGrey.shade600,
                       borderRadius: BorderRadius.circular(16)),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),

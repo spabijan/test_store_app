@@ -54,6 +54,13 @@ class ProductItemWidget extends ConsumerWidget {
                   fontWeight: FontWeight.w800,
                   fontSize: 12,
                   color: const Color(0xff212121))),
+          const SizedBox(height: 4),
+          Text('\$${product.productPrice.toStringAsFixed(2)}',
+              overflow: TextOverflow.ellipsis,
+              style: GoogleFonts.roboto(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                  color: const Color(0xff212121))),
         ],
       ),
     );

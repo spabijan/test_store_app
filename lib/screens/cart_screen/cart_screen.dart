@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:test_store_app/screens/cart_screen/models/cart/provider/cart_provider.dart';
 import 'package:test_store_app/r.dart';
+import 'package:test_store_app/screens/cart_screen/models/cart/provider/cart_total_amount.dart';
 import 'package:test_store_app/screens/cart_screen/providers/cart_list_item_provider.dart';
 import 'package:test_store_app/screens/cart_screen/widgets/cart_goto_checkup_button.dart';
 import 'package:test_store_app/screens/cart_screen/widgets/cart_info_icon.dart';
@@ -19,17 +20,18 @@ class CartScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-          preferredSize:
-              Size.fromHeight(MediaQuery.of(context).size.height * 0.2),
-          child: Container(
-            width: MediaQuery.of(context).size.width,
-            height: 118,
-            clipBehavior: Clip.hardEdge,
-            decoration: const BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage(AssetIcons.cartb), fit: BoxFit.cover)),
-            child: const CartInfoIcon(),
-          )),
+        preferredSize:
+            Size.fromHeight(MediaQuery.of(context).size.height * 0.2),
+        child: Consumer(
+          builder: (_, WidgetRef ref, __) {
+            final items = ref.watch(cartTotalElementsProvider);
+            return AppBarWidget(
+              text: 'My Cart',
+              itemCount: items,
+            );
+          },
+        ),
+      ),
       body: Consumer(
         builder: (_, WidgetRef ref, __) {
           final cartData = ref.watch(cartProvider);
@@ -67,7 +69,9 @@ class CartScreen extends StatelessWidget {
       ),
       bottomSheet: Consumer(
         builder: (_, WidgetRef ref, __) {
-          return CartCheckupButton(gotoCheckout: () => _gotoCheckup(ref));
+          final carNotEmpty = ref.watch(cartProvider).isNotEmpty;
+          return CartCheckupButton(
+              isEnabled: carNotEmpty, gotoCheckout: () => _gotoCheckup(ref));
         },
       ),
       bottomNavigationBar: NavigationTapBar(),

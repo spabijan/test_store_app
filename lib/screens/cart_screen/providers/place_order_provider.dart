@@ -2,6 +2,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:test_store_app/screens/authentication/repository/providers/auth_state_details_provider.dart';
 import 'package:test_store_app/screens/cart_screen/models/cart/cart_model.dart';
 import 'package:test_store_app/model/services/providers/orders_service_provider.dart';
+import 'package:test_store_app/screens/account_details/providers/get_orders_provider.dart';
 
 part 'place_order_provider.g.dart';
 
@@ -22,8 +23,8 @@ class PlaceOrder extends _$PlaceOrder {
     final key = _key;
 
     final newState = await AsyncValue.guard(() async {
-      await Future.forEach(cart, (product) {
-        service.uploadOrder(
+      await Future.forEach(cart, (product) async {
+        await service.uploadOrder(
             fullName: user.fullName,
             email: user.email,
             productName: product.productName,
@@ -36,6 +37,8 @@ class PlaceOrder extends _$PlaceOrder {
             city: user.city,
             state: user.state,
             locality: user.locality);
+        // force order provider to redo fetching
+        ref.invalidate(ordersProvider);
       });
     });
 
