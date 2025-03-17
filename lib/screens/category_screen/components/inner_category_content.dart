@@ -13,7 +13,7 @@ import 'package:test_store_app/screens/category_screen/providers/subcategory_ite
 import 'package:test_store_app/screens/components/banner/inner_banner_widget.dart';
 import 'package:test_store_app/screens/widgets/section_header_widget.dart';
 
-class InnerCategoryContent extends ConsumerStatefulWidget {
+class InnerCategoryContent extends ConsumerWidget {
   const InnerCategoryContent({
     required this.navigateToProductDetails,
     super.key,
@@ -22,35 +22,7 @@ class InnerCategoryContent extends ConsumerStatefulWidget {
   final Function(ProductViewModel product) navigateToProductDetails;
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _InnerCategoryContentState();
-}
-
-class _InnerCategoryContentState extends ConsumerState<InnerCategoryContent> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final category = ref.read(categoryItemProvider);
-      ref.read(subcategoriesProvider(category.name)).whenData((value) {
-        if (value.isEmpty) {
-          ref
-              .read(subcategoriesProvider(category.name).notifier)
-              .loadSubcategories();
-        }
-      });
-      ref.read(productsByCategoryProvider(category.name)).whenData((value) {
-        if (value.isEmpty) {
-          ref
-              .read(productsByCategoryProvider(category.name).notifier)
-              .loadProducts();
-        }
-      });
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final category = ref.watch(categoryItemProvider);
     final subcategories = ref.watch(subcategoriesProvider(category.name));
     final produts = ref.watch(productsByCategoryProvider(category.name));
@@ -118,9 +90,8 @@ class _InnerCategoryContentState extends ConsumerState<InnerCategoryContent> {
                                           .overrideWithValue(data.value[index])
                                     ],
                                     child: InkWell(
-                                        onTap: () =>
-                                            widget.navigateToProductDetails(
-                                                data.value[index]),
+                                        onTap: () => navigateToProductDetails(
+                                            data.value[index]),
                                         child: const ProductItemWidget()));
                               },
                             ),

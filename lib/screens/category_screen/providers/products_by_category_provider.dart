@@ -31,25 +31,28 @@ class ProductsByCategory extends _$ProductsByCategory {
 
     _key = Object();
     _categoryName = categoryName;
-    return List.empty();
+    return _loadProducts();
   }
 
-  void loadProducts() async {
+  void loadPrgoducts() async {
     state = const AsyncLoading();
     final key = _key;
 
     final newState = await AsyncValue.guard(() async {
-      var categories = await ref
-          .read(productRepositoryProvider)
-          .loadProductsByCategory(_categoryName);
-      return [
-        for (final category in categories)
-          ProductViewModel(productModel: category)
-      ];
+      return _loadProducts();
     });
 
     if (key == _key) {
       state = newState;
     }
+  }
+
+  Future<List<ProductViewModel>> _loadProducts() async {
+    var products = await ref
+        .watch(productRepositoryProvider)
+        .loadProductsByCategory(_categoryName);
+    return [
+      for (final category in products) ProductViewModel(productModel: category)
+    ];
   }
 }

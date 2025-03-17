@@ -6,28 +6,21 @@ part 'banner_provider.g.dart';
 
 @Riverpod(keepAlive: true)
 class Banners extends _$Banners {
-  Object? _key;
-
   @override
   FutureOr<List<BannerViewModel>> build() {
-    _key = Object();
-    ref.onDispose(() => _key = null);
-    return List.empty();
+    return _loadBanners();
   }
 
   void loadBanner() async {
     state = const AsyncLoading();
-    final key = _key;
 
-    final newState = await AsyncValue.guard(() async {
-      var banners = await ref.read(bannerServiceProvider).loadBanners();
-      return [
-        for (final banner in banners) BannerViewModel(bannerModel: banner)
-      ];
+    state = await AsyncValue.guard(() async {
+      return _loadBanners();
     });
+  }
 
-    if (key == _key) {
-      state = newState;
-    }
+  FutureOr<List<BannerViewModel>> _loadBanners() async {
+    var banners = await ref.watch(bannerServiceProvider).loadBanners();
+    return [for (final banner in banners) BannerViewModel(bannerModel: banner)];
   }
 }

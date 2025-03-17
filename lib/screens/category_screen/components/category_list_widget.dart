@@ -7,32 +7,13 @@ import 'package:test_store_app/screens/category_screen/models/category_view_mode
 import 'package:test_store_app/screens/category_screen/components/category_item_widget.dart';
 import 'package:test_store_app/screens/widgets/section_header_widget.dart';
 
-class CategoryListWidget extends ConsumerStatefulWidget {
+class CategoryListWidget extends ConsumerWidget {
   const CategoryListWidget({required this.navigateToCategory, super.key});
 
   final Function(CategoryViewModel categoryVM) navigateToCategory;
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _CategoryListWidgetState();
-}
-
-class _CategoryListWidgetState extends ConsumerState<CategoryListWidget> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) => ref.read(categoriesProvider).whenData(
-              (value) {
-                if (value.isEmpty) {
-                  ref.read(categoriesProvider.notifier).loadCategories();
-                }
-              },
-            ));
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     ref.listen(
         categoriesProvider,
         (previous, next) => next
@@ -62,8 +43,7 @@ class _CategoryListWidgetState extends ConsumerState<CategoryListWidget> {
                   itemCount: data.value.length,
                   itemBuilder: (BuildContext context, int index) => InkWell(
                       child: InkWell(
-                          onTap: () =>
-                              widget.navigateToCategory(data.value[index]),
+                          onTap: () => navigateToCategory(data.value[index]),
                           child: ProviderScope(overrides: [
                             categoryItemProvider
                                 .overrideWithValue(data.value[index])

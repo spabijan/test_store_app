@@ -30,7 +30,7 @@ class Subcategories extends _$Subcategories {
 
     _key = Object();
     _categoryName = categoryName;
-    return List.empty();
+    return _loadSubcategories();
   }
 
   void loadSubcategories() async {
@@ -38,17 +38,21 @@ class Subcategories extends _$Subcategories {
     final key = _key;
 
     final newState = await AsyncValue.guard(() async {
-      var categories = await ref
-          .read(subcategoryServiceProvider)
-          .loadSubcategoriesByName(_categoryName);
-      return [
-        for (final category in categories)
-          SubcategoryViewModel(subcategoryModel: category)
-      ];
+      return _loadSubcategories();
     });
 
     if (key == _key) {
       state = newState;
     }
+  }
+
+  Future<List<SubcategoryViewModel>> _loadSubcategories() async {
+    var categories = await ref
+        .watch(subcategoryServiceProvider)
+        .loadSubcategoriesByName(_categoryName);
+    return [
+      for (final category in categories)
+        SubcategoryViewModel(subcategoryModel: category)
+    ];
   }
 }

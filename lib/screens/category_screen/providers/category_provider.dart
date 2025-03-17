@@ -6,29 +6,24 @@ part 'category_provider.g.dart';
 
 @Riverpod(keepAlive: true)
 class Categories extends _$Categories {
-  Object? _key;
-
   @override
   FutureOr<List<CategoryViewModel>> build() {
-    _key = Object();
-    ref.onDispose(() => _key = null);
-    return List.empty();
+    return _loadCategories();
   }
 
   void loadCategories() async {
     state = const AsyncLoading();
-    final key = _key;
 
-    final newState = await AsyncValue.guard(() async {
-      var categories = await ref.read(categoryServiceProvider).loadCategories();
-      return [
-        for (final category in categories)
-          CategoryViewModel(categoryModel: category)
-      ];
+    state = await AsyncValue.guard(() async {
+      return _loadCategories();
     });
+  }
 
-    if (key == _key) {
-      state = newState;
-    }
+  Future<List<CategoryViewModel>> _loadCategories() async {
+    var categories = await ref.watch(categoryServiceProvider).loadCategories();
+    return [
+      for (final category in categories)
+        CategoryViewModel(categoryModel: category)
+    ];
   }
 }

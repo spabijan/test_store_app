@@ -3,30 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:test_store_app/screens/components/banner/provider/banner_provider.dart';
 import 'package:test_store_app/model/services/manage_http_response.dart';
 
-class BannerListWidget extends ConsumerStatefulWidget {
+class BannerListWidget extends ConsumerWidget {
   const BannerListWidget({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _BannerWidgetState();
-}
-
-class _BannerWidgetState extends ConsumerState<BannerListWidget> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(bannersProvider).whenData(
-        (value) {
-          if (value.isEmpty) {
-            ref.read(bannersProvider.notifier).loadBanner();
-          }
-        },
-      );
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     ref.listen(bannersProvider, (previous, next) {
       next.whenOrNull(error: (error, stackTrace) {
         var errorMessage =

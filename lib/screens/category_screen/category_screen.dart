@@ -22,28 +22,8 @@ class CategoryScreen extends ConsumerStatefulWidget {
 class _CategoryScreenState extends ConsumerState<CategoryScreen> {
   CategoryViewModel? _selectedCategory;
 
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) => ref.read(categoriesProvider).whenData(
-              (value) {
-                if (value.isEmpty) {
-                  ref.read(categoriesProvider.notifier).loadCategories();
-                }
-              },
-            ));
-  }
-
   void _setCategory(CategoryViewModel category) {
     setState(() => _selectedCategory = category);
-    ref.read(subcategoriesProvider(category.name)).whenData((value) {
-      if (value.isEmpty) {
-        ref
-            .read(subcategoriesProvider(category.name).notifier)
-            .loadSubcategories();
-      }
-    });
   }
 
   @override
@@ -96,54 +76,42 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
           Expanded(
               flex: 5,
               child: _selectedCategory != null
-                  ? Column(
-                      children: [
-                        ProviderScope(overrides: [
-                          categoryItemProvider
-                              .overrideWithValue(_selectedCategory!)
-                        ], child: const CategoryItemWidget()),
-                        if (_selectedCategory != null)
-                          Consumer(
-                            builder: (context, ref, child) {
-                              var subcategoriesState = ref.watch(
-                                  subcategoriesProvider(
-                                      _selectedCategory!.name));
-                              return subcategoriesState.map(
-                                  data: (data) => GridView.builder(
-                                        shrinkWrap: true,
-                                        itemCount: data.value.length,
-                                        gridDelegate:
-                                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                                crossAxisCount: 3,
-                                                mainAxisSpacing: 4,
-                                                crossAxisSpacing: 8),
-                                        itemBuilder: (context, index) =>
-                                            ProviderScope(overrides: [
-                                          subcategoryItemProvider
-                                              .overrideWithValue(
-                                                  data.value[index])
-                                        ], child: const SubcategoryListItem()),
-                                      ),
-                                  error: (errorState) {
-                                    var e = errorState.error;
-                                    var errorMessage = e is HttpError
-                                        ? e.message
-                                        : errorState.error.toString();
-                                    return Center(
-                                        child: Text('Error $errorMessage'));
-                                  },
-                                  loading: (loading) =>
-                                      const CircularProgressIndicator
-                                          .adaptive());
-                            },
-                          ),
-                        //  GridView.builder(
-                        //   shrinkWrap: true,
-                        //   itemCount: ,
-                        //   gridDelegate: gridDelegate,
-                        //  itemBuilder: itemBuilder)
-                      ],
-                    )
+                  ? Column(children: [
+                      ProviderScope(overrides: [
+                        categoryItemProvider
+                            .overrideWithValue(_selectedCategory!)
+                      ], child: const CategoryItemWidget()),
+                      if (_selectedCategory != null)
+                        Consumer(builder: (context, ref, child) {
+                          var subcategoriesState = ref.watch(
+                              subcategoriesProvider(_selectedCategory!.name));
+                          return subcategoriesState.map(
+                              data: (data) => GridView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: data.value.length,
+                                    gridDelegate:
+                                        const SliverGridDelegateWithFixedCrossAxisCount(
+                                            crossAxisCount: 3,
+                                            mainAxisSpacing: 4,
+                                            crossAxisSpacing: 8),
+                                    itemBuilder: (context, index) =>
+                                        ProviderScope(overrides: [
+                                      subcategoryItemProvider
+                                          .overrideWithValue(data.value[index])
+                                    ], child: const SubcategoryListItem()),
+                                  ),
+                              error: (errorState) {
+                                var e = errorState.error;
+                                var errorMessage = e is HttpError
+                                    ? e.message
+                                    : errorState.error.toString();
+                                return Center(
+                                    child: Text('Error $errorMessage'));
+                              },
+                              loading: (loading) =>
+                                  const CircularProgressIndicator.adaptive());
+                        })
+                    ])
                   : const SizedBox.shrink())
         ],
       ),
