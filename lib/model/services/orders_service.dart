@@ -58,4 +58,14 @@ class OrdersService {
       rethrow;
     }
   }
+
+  Future<void> deleteOrderById({required String orderId}) async {
+    try {
+      var response = await http
+          .delete(Uri.parse('${MyGlobalVariables.uri}/api/orders/$orderId'));
+      HttpResponseUtils.checkForHttpResponseErrors(response: response);
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

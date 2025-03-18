@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:test_store_app/screens/account_details/account_screen.dart';
+import 'package:test_store_app/screens/account_details/order_details_screen.dart';
 import 'package:test_store_app/screens/account_details/order_screen.dart';
 import 'package:test_store_app/screens/authentication/create_account/register_screen.dart';
 import 'package:test_store_app/screens/authentication/login/login_screen.dart';
@@ -88,7 +89,7 @@ GoRouter router(Ref ref) {
                   path: '/category',
                   name: RouteNames.dashboardCategory,
                   builder: (context, state) {
-                    final category = ref.read(selectedCategoryProvider);
+                    final category = ref.watch(selectedCategoryProvider);
                     return InnerCategoryScreen(categoryViewModel: category!);
                   },
                   routes: [
@@ -96,7 +97,7 @@ GoRouter router(Ref ref) {
                         path: '/product',
                         name: RouteNames.categoryProduct,
                         builder: (context, state) {
-                          final model = ref.read(selectedProductProvider);
+                          final model = ref.watch(selectedProductProvider);
                           return ProductDetailScreen(viewModel: model!);
                         })
                   ]),
@@ -104,7 +105,7 @@ GoRouter router(Ref ref) {
                   path: '/product',
                   name: RouteNames.dashboardProduct,
                   builder: (context, state) {
-                    final model = ref.read(selectedProductProvider);
+                    final model = ref.watch(selectedProductProvider);
                     return ProductDetailScreen(viewModel: model!);
                   })
             ]),
@@ -151,10 +152,18 @@ GoRouter router(Ref ref) {
                 const NoTransitionPage(child: AccountScreen()),
             routes: [
               GoRoute(
-                path: '/orders',
-                name: RouteNames.accountOrders,
-                builder: (context, state) => const OrderScreen(),
-              )
+                  path: '/orders',
+                  name: RouteNames.accountOrders,
+                  builder: (context, state) => const OrderScreen(),
+                  routes: [
+                    GoRoute(
+                        path: '/orderDetails',
+                        name: RouteNames.accountOrdersDetails,
+                        builder: (context, state) {
+                          final model = ref.watch(selectedOrderDetailsProvider);
+                          return OrderDetailsScreen(viewModel: model!);
+                        })
+                  ])
             ]),
       ]);
 }

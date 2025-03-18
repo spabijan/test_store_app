@@ -18,12 +18,12 @@ class PlaceOrder extends _$PlaceOrder {
 
   void placeOrder(List<CartModel> cart) async {
     state = const AsyncLoading();
-    final service = ref.watch(ordersServiceProvider);
-    final user = ref.watch(loggedUserProvider)!;
     final key = _key;
 
     final newState = await AsyncValue.guard(() async {
       await Future.forEach(cart, (product) async {
+        final service = ref.read(ordersServiceProvider);
+        final user = ref.read(loggedUserProvider)!;
         await service.uploadOrder(
             fullName: user.fullName,
             email: user.email,

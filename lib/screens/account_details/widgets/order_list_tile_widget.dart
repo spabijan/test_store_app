@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:test_store_app/r.dart';
+import 'package:test_store_app/screens/account_details/providers/delete_order_provider.dart';
 import 'package:test_store_app/screens/account_details/providers/order_list_item_provider.dart';
 import 'package:test_store_app/screens/category_screen/models/order_view_model.dart';
 
@@ -151,7 +152,9 @@ class OrderListTileWidget extends ConsumerWidget {
                       top: 115,
                       left: 298,
                       child: InkWell(
-                        onTap: () {},
+                        onTap: () {
+                          _deleteOrder(orderVM, ref);
+                        },
                         child: Image.asset(
                           AssetIcons.delete,
                           width: 20,
@@ -159,6 +162,10 @@ class OrderListTileWidget extends ConsumerWidget {
                         ),
                       ))
                 ]))));
+  }
+
+  void _deleteOrder(OrderViewModel order, WidgetRef ref) {
+    ref.read(deleteOrderProvider.notifier).deleteOrder(order.id);
   }
 
   Color _getDeliveryColor(OrderViewModel order) {

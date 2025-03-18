@@ -42,7 +42,7 @@ class BannerListWidget extends ConsumerWidget {
             return Center(child: Text('Error $errorMessage'));
           },
           loading: (loading) {
-            return const CircularProgressIndicator.adaptive();
+            return const Center(child: CircularProgressIndicator.adaptive());
           },
         ),
       ),

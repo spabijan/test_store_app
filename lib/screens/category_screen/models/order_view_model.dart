@@ -5,6 +5,7 @@ class OrderViewModel {
 
   final OrderModel _orderModel;
 
+  String get id => _orderModel.id;
   String get fullName => _orderModel.fullName;
   String get email => _orderModel.email;
   String get productName => _orderModel.productName;
