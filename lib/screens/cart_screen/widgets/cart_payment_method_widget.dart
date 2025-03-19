@@ -11,7 +11,6 @@ class PaymentSelectionWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final paymentMethod = ref.watch(selectedPaymentMethodProvider);
     return Column(
       children: [
         for (final type in PaymentTypes.values) PaymentMethodRow(type: type),

@@ -4,13 +4,13 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:test_store_app/screens/cart_screen/models/cart/provider/cart_total_amount.dart';
 
 class CartCheckupButton extends StatelessWidget {
-  CartCheckupButton({
+  const CartCheckupButton({
     required this.gotoCheckout,
     this.isEnabled = true,
     super.key,
   });
 
-  bool isEnabled;
+  final bool isEnabled;
   final Function gotoCheckout;
 
   @override

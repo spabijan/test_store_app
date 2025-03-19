@@ -97,7 +97,6 @@ class Cart extends _$Cart {
   void clearCart() async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
-      final data = state.value!;
       ref.read(cartRepositoryProvider).clearCart();
       return [];
     });
