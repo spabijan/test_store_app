@@ -7,23 +7,20 @@ part 'cart_total_amount.g.dart';
 @riverpod
 double cartTotalAmount(Ref ref) {
   final cart = ref.watch(cartProvider);
-
-  double amount = 0.0;
-
-  for (final cartValue in cart.values) {
-    amount += cartValue.productPrice * cartValue.orderQuantity;
-  }
-  return amount;
+  return cart.maybeWhen(
+      data: (data) => data.fold(
+            0.0,
+            (previousValue, element) =>
+                previousValue + element.productPrice * element.orderQuantity,
+          ),
+      orElse: () => 0);
 }
 
 @riverpod
 int cartTotalElements(Ref ref) {
   final cart = ref.watch(cartProvider);
-  int total = 0;
-
-  for (final cartValue in cart.values) {
-    total += cartValue.orderQuantity;
-  }
-
-  return total;
+  return cart.maybeWhen(
+      orElse: () => 0,
+      data: (data) => data.fold(0,
+          (previousValue, element) => previousValue + element.orderQuantity));
 }

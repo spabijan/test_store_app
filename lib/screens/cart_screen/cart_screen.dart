@@ -34,41 +34,48 @@ class CartScreen extends StatelessWidget {
       body: Consumer(
         builder: (_, WidgetRef ref, __) {
           final cartData = ref.watch(cartProvider);
-          return cartData.isEmpty
-              ? Center(
-                  child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('Your shopping cart is empty',
-                        style: GoogleFonts.roboto(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.grey.shade900))
-                  ],
-                ))
-              : SingleChildScrollView(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      const CartItemsHeader(),
-                      ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: cartData.length,
-                        itemBuilder: (context, index) {
-                          final cartItem = cartData.values.toList()[index];
-                          return ProviderScope(overrides: [
-                            cartModelProvider.overrideWithValue(cartItem)
-                          ], child: const CartListItem());
-                        },
-                      )
-                    ],
-                  ),
-                );
+          return cartData.maybeWhen(
+              data: (data) {
+                return data.isEmpty
+                    ? Center(
+                        child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('Your shopping cart is empty',
+                              style: GoogleFonts.roboto(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.grey.shade900))
+                        ],
+                      ))
+                    : SingleChildScrollView(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            const CartItemsHeader(),
+                            ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: data.length,
+                              itemBuilder: (context, index) {
+                                final cartItem = data[index];
+                                return ProviderScope(overrides: [
+                                  cartModelProvider.overrideWithValue(cartItem)
+                                ], child: const CartListItem());
+                              },
+                            )
+                          ],
+                        ),
+                      );
+              },
+              orElse: SizedBox.shrink);
         },
       ),
       bottomSheet: Consumer(
         builder: (_, WidgetRef ref, __) {
-          final carNotEmpty = ref.watch(cartProvider).isNotEmpty;
+          final carNotEmpty = ref
+              .watch(cartProvider)
+              .maybeWhen(data: (data) => data.isNotEmpty, orElse: () => false);
+
           return CartCheckupButton(
               isEnabled: carNotEmpty, gotoCheckout: () => _gotoCheckup(ref));
         },

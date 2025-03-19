@@ -60,13 +60,17 @@ class CheckoutScreen extends ConsumerWidget {
               Flexible(child: Consumer(
                 builder: (_, WidgetRef ref, __) {
                   final cart = ref.watch(cartProvider);
-                  return ListView.builder(
-                      itemCount: cart.length,
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) {
-                        final item = cart.values.toList()[index];
-                        return CartCheckoutListRow(item: item);
-                      });
+                  return cart.maybeWhen(
+                      data: (data) {
+                        return ListView.builder(
+                            itemCount: data.length,
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) {
+                              final item = data[index];
+                              return CartCheckoutListRow(item: item);
+                            });
+                      },
+                      orElse: SizedBox.shrink);
                 },
               )),
               const SizedBox(height: 10),
@@ -84,23 +88,29 @@ class CheckoutScreen extends ConsumerWidget {
           builder: (_, WidgetRef ref, __) {
             final paymentType = ref.watch(selectedPaymentMethodProvider);
             final cart = ref.watch(cartProvider);
-            return BlueButton(
-                onTap: () {
-                  if (_userHasShippingData(ref)) {
-                    switch (paymentType) {
-                      case PaymentTypes.stripe:
-                        throw UnimplementedError();
-                      case PaymentTypes.cash:
-                        ref
-                            .read(placeOrderProvider.notifier)
-                            .placeOrder(cart.values.toList());
-                    }
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Missing address data')));
-                  }
-                },
-                textButton: _getTextButton(paymentType, ref));
+            return cart.maybeWhen(
+              orElse: SizedBox.shrink,
+              data: (data) {
+                return BlueButton(
+                    onTap: () {
+                      if (_userHasShippingData(ref)) {
+                        switch (paymentType) {
+                          case PaymentTypes.stripe:
+                            throw UnimplementedError();
+                          case PaymentTypes.cash:
+                            ref
+                                .read(placeOrderProvider.notifier)
+                                .placeOrder(data);
+                        }
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text('Missing address data')));
+                      }
+                    },
+                    textButton: _getTextButton(paymentType, ref));
+              },
+            );
           },
         ),
       ),

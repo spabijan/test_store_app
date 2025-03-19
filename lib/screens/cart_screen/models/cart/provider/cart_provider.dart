@@ -1,75 +1,105 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:test_store_app/screens/cart_screen/models/cart/cart_model.dart';
+import 'package:test_store_app/screens/components/cart/model/provider/cart_repository_provider.dart';
 
 part 'cart_provider.g.dart';
 
 @Riverpod(keepAlive: true)
 class Cart extends _$Cart {
   @override
-  Map<String, CartModel> build() {
-    return {};
+  FutureOr<List<CartModel>> build() {
+    return _getCartItems();
   }
 
-  void addProductToCart(CartModel cartProduct) {
-    if (state.containsKey(cartProduct.productId)) {
-      state = {
-        ...state,
-        cartProduct.productId: state[cartProduct.productId]!.copyWith(
-            orderQuantity: state[cartProduct.productId]!.orderQuantity +
-                cartProduct.orderQuantity)
-      };
-    } else {
-      state = {...state, cartProduct.productId: cartProduct};
-    }
+  Future<List<CartModel>> _getCartItems() async {
+    return await ref.read(cartRepositoryProvider).getCartItems();
   }
 
-  void incrementCartItem(String id) {
-    if (state.containsKey(id)) {
-      state = state.map((key, value) {
-        if (key == id) {
-          return MapEntry(
-              key, value.copyWith(orderQuantity: value.orderQuantity + 1));
-        } else {
-          return MapEntry(key, value);
-        }
-      });
-    }
-  }
+  void addProductToCart(CartModel cartProduct) async {
+    state = const AsyncLoading();
 
-  void decrementCartItem(String id) {
-    if (state.containsKey(id)) {
-      Map<String, CartModel> newState = {};
-      for (final entry in state.entries) {
-        if (entry.key != id) {
-          newState.addEntries({entry});
-        } else {
-          if (entry.value.orderQuantity > 1) {
-            newState.addEntries({
-              MapEntry(
-                  entry.key,
-                  entry.value
-                      .copyWith(orderQuantity: entry.value.orderQuantity - 1))
-            });
-          }
-        }
+    state = await AsyncValue.guard(() async {
+      final data = state.value!;
+
+      if (data.any((element) => element.productId == cartProduct.productId)) {
+        var foundDuplicate = data.firstWhere(
+            (element) => element.productId == cartProduct.productId);
+        var newValue = foundDuplicate.copyWith(
+            orderQuantity:
+                foundDuplicate.orderQuantity + cartProduct.orderQuantity);
+
+        ref.read(cartRepositoryProvider).addToCart(model: newValue);
+        return [
+          for (final product in data)
+            product.productId == cartProduct.productId ? newValue : product
+        ];
+      } else {
+        ref.read(cartRepositoryProvider).addToCart(model: cartProduct);
+        return [...data, cartProduct];
       }
-      state = newState;
-    }
+    });
   }
 
-  void removeCartItem(String id) {
-    if (state.containsKey(id)) {
-      Map<String, CartModel> newState = {};
-      for (final entry in state.entries) {
-        if (entry.key != id) {
-          newState.addEntries({entry});
-        }
+  void incrementCartItem(String id) async {
+    state = const AsyncLoading();
+
+    state = await AsyncValue.guard(() async {
+      final data = state.value!;
+      var foundDuplicate =
+          data.firstWhere((element) => element.productId == id);
+      var newValue = foundDuplicate.copyWith(
+          orderQuantity: foundDuplicate.orderQuantity + 1);
+      ref.read(cartRepositoryProvider).addToCart(model: newValue);
+      return [
+        for (final product in data) product.productId == id ? newValue : product
+      ];
+    });
+  }
+
+  void decrementCartItem(String id) async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      final data = state.value!;
+      var foundDuplicate =
+          data.firstWhere((element) => element.productId == id);
+
+      if (foundDuplicate.orderQuantity <= 1) {
+        ref.read(cartRepositoryProvider).removeFromCart(id: id);
+        return [
+          for (final elem in data)
+            if (elem.productId != id) elem
+        ];
+      } else {
+        var newValue = foundDuplicate.copyWith(
+            orderQuantity: foundDuplicate.orderQuantity - 1);
+        ref.read(cartRepositoryProvider).addToCart(model: newValue);
+
+        return [
+          for (final product in data)
+            product.productId == id ? newValue : product
+        ];
       }
-      state = newState;
-    }
+    });
   }
 
-  void clearCart() {
-    state = {};
+  void removeCartItem(String id) async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      final data = state.value!;
+      ref.read(cartRepositoryProvider).removeFromCart(id: id);
+      return [
+        for (final elem in data)
+          if (elem.productId != id) elem
+      ];
+    });
+  }
+
+  void clearCart() async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      final data = state.value!;
+      ref.read(cartRepositoryProvider).clearCart();
+      return [];
+    });
   }
 }

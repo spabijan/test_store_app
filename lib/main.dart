@@ -7,6 +7,7 @@ import 'package:test_store_app/screens/navigation/provider/go_router_provider.da
 Future<void> main() async {
   await Hive.initFlutter();
   await Hive.openBox('wishlist');
+  await Hive.openBox('cart');
   usePathUrlStrategy();
   runApp(
     const ProviderScope(
