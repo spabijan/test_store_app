@@ -15,6 +15,8 @@ class ProductModel with _$ProductModel {
       required List<String> images,
       required String vendorId,
       @JsonKey(name: 'fullName') required String vendorFullName,
+      @Default(0.0) double averageRating,
+      @Default(0) int totalRating,
       @JsonKey(name: '_id') @Default('') String id}) = _ProductModel;
 
   factory ProductModel.fromJson(Map<String, dynamic> json) =>

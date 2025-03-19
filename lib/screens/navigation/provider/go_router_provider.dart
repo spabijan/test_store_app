@@ -13,7 +13,7 @@ import 'package:test_store_app/screens/cart_screen/shipping_address_screen.dart'
 import 'package:test_store_app/screens/category_screen/category_screen.dart';
 import 'package:test_store_app/screens/category_screen/inner_category_screen.dart';
 import 'package:test_store_app/screens/category_screen/product_detial_screen.dart';
-import 'package:test_store_app/screens/favorite_screen.dart';
+import 'package:test_store_app/screens/wishlist/favorite_screen.dart';
 import 'package:test_store_app/screens/home_screen.dart';
 import 'package:test_store_app/screens/navigation/provider/navigation_providers.dart';
 import 'package:test_store_app/screens/navigation/provider/splash_screen_ready_provider.dart';

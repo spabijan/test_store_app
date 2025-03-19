@@ -4,6 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:test_store_app/screens/cart_screen/models/cart/cart_model.dart';
 import 'package:test_store_app/screens/cart_screen/models/cart/provider/cart_provider.dart';
 import 'package:test_store_app/screens/category_screen/models/product_view_model.dart';
+import 'package:test_store_app/screens/wishlist/models/wishlist_model.dart';
+import 'package:test_store_app/screens/wishlist/providers/wishlist_provider.dart';
 
 class ProductDetailScreen extends ConsumerWidget {
   const ProductDetailScreen({required this.viewModel, super.key});
@@ -15,8 +17,24 @@ class ProductDetailScreen extends ConsumerWidget {
         appBar: AppBar(
           centerTitle: true,
           actions: [
-            IconButton(
-                onPressed: () {}, icon: const Icon(Icons.favorite_border))
+            Consumer(
+              builder: (_, WidgetRef ref, __) {
+                var wishlist = ref.watch(wishlistProvider);
+                return IconButton(onPressed: () {
+                  if (wishlist.containsKey(viewModel.productId)) {
+                    _removeFromWishlist(context, ref);
+                  } else {
+                    _addToWishlist(context, ref);
+                  }
+                }, icon: Consumer(
+                  builder: (_, WidgetRef ref, __) {
+                    return wishlist.containsKey(viewModel.productId)
+                        ? const Icon(Icons.favorite)
+                        : const Icon(Icons.favorite_border);
+                  },
+                ));
+              },
+            )
           ],
           title: Text('Product Detail',
               style: GoogleFonts.quicksand(
@@ -87,6 +105,23 @@ class ProductDetailScreen extends ConsumerWidget {
                 ],
               ),
             ),
+            viewModel.hasReviews
+                ? Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.star, color: Colors.amber, size: 12),
+                        const SizedBox(width: 4),
+                        Text(
+                          '${viewModel.averageRating.toStringAsFixed(1)} (${viewModel.totalRatings})',
+                          style: GoogleFonts.montserrat(
+                              fontWeight: FontWeight.w600,
+                              color: Colors.grey.shade700),
+                        )
+                      ],
+                    ),
+                  )
+                : const SizedBox.shrink(),
             Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
@@ -146,20 +181,28 @@ class ProductDetailScreen extends ConsumerWidget {
             )));
   }
 
+  void _addToWishlist(BuildContext context, WidgetRef ref) {
+    ref
+        .read(wishlistProvider.notifier)
+        .addProductToWishlist(WishlistModel.fromProduct(viewModel));
+
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Added ${viewModel.productName} to wishlist')));
+  }
+
   void _addToCart(BuildContext context, WidgetRef ref) {
-    ref.read(cartProvider.notifier).addProductToCart(CartModel(
-        productName: viewModel.productName,
-        productPrice: viewModel.productPrice,
-        category: viewModel.category,
-        image: viewModel.images,
-        vendorID: viewModel.vendorId,
-        stockQuantity: viewModel.quantity,
-        orderQuantity: 1,
-        productId: viewModel.productId,
-        description: viewModel.description,
-        vendorFullName: viewModel.vendorFullName));
+    ref
+        .read(cartProvider.notifier)
+        .addProductToCart(CartModel.fromProduct(viewModel));
 
     ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Added ${viewModel.productName} to cart')));
+  }
+
+  void _removeFromWishlist(BuildContext context, WidgetRef ref) {
+    ref.read(wishlistProvider.notifier).removeWishlistItem(viewModel.productId);
+
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Removed ${viewModel.productName} from wishlist')));
   }
 }

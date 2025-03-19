@@ -17,4 +17,7 @@ class ProductViewModel {
   String get vendorId => _productModel.vendorId;
   String get productId => _productModel.id;
   String get vendorFullName => _productModel.vendorFullName;
+  bool get hasReviews => _productModel.totalRating > 0;
+  int get totalRatings => _productModel.totalRating;
+  double get averageRating => _productModel.averageRating;
 }
