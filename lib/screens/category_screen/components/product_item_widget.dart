@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:test_store_app/r.dart';
 import 'package:test_store_app/screens/cart_screen/models/cart/cart_model.dart';
 import 'package:test_store_app/screens/cart_screen/models/cart/provider/cart_provider.dart';
 import 'package:test_store_app/screens/category_screen/models/product_view_model.dart';
@@ -14,9 +13,14 @@ class ProductItemWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen(wishlistProvider, (previous, next) {
+      next.whenOrNull(error: (error, stackTrace) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(error.toString())));
+      });
+    });
     final product = ref.watch(productItemProvider);
-    final wishlist = ref.watch(wishlistProvider);
-    final cart = ref.watch(cartProvider);
+
     return Container(
       width: 170,
       margin: const EdgeInsets.symmetric(horizontal: 8),
@@ -39,19 +43,32 @@ class ProductItemWidget extends ConsumerWidget {
                 Positioned(
                     top: 4,
                     right: 8,
-                    child: IconButton(
-                        onPressed: () {
-                          if (!wishlist.containsKey(product.productId)) {
-                            _addToFavrites(ref, product, context);
-                          } else {
-                            _removeFromFavorites(ref, product, context);
-                          }
-                        },
-                        icon: Icon(
-                            wishlist.containsKey(product.productId)
-                                ? Icons.favorite
-                                : Icons.favorite_outline,
-                            size: 24))),
+                    child: Consumer(
+                      builder: (_, WidgetRef ref, __) {
+                        final wishlist = ref.watch(wishlistProvider);
+                        return wishlist.maybeWhen(
+                          data: (data) {
+                            return IconButton(
+                                onPressed: () {
+                                  if (!data.any((element) =>
+                                      element.productId == product.productId)) {
+                                    _addToFavrites(ref, product, context);
+                                  } else {
+                                    _removeFromFavorites(ref, product, context);
+                                  }
+                                },
+                                icon: Icon(
+                                    data.any((element) =>
+                                            element.productId ==
+                                            product.productId)
+                                        ? Icons.favorite
+                                        : Icons.favorite_outline,
+                                    size: 24));
+                          },
+                          orElse: SizedBox.shrink,
+                        );
+                      },
+                    )),
                 Positioned(
                     bottom: 4,
                     right: 8,

@@ -20,7 +20,7 @@ class Banners extends _$Banners {
   }
 
   FutureOr<List<BannerViewModel>> _loadBanners() async {
-    var banners = await ref.watch(bannerServiceProvider).loadBanners();
+    var banners = await ref.read(bannerServiceProvider).loadBanners();
     return [for (final banner in banners) BannerViewModel(bannerModel: banner)];
   }
 }

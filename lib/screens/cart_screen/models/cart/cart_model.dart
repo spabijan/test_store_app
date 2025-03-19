@@ -1,4 +1,3 @@
-import 'package:decimal/decimal.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:test_store_app/screens/category_screen/models/product_view_model.dart';
 
@@ -9,7 +8,7 @@ part 'cart_model.g.dart';
 class CartModel with _$CartModel {
   const factory CartModel(
       {required String productName,
-      required Decimal productPrice,
+      required double productPrice,
       required String category,
       required List<String> image,
       required String vendorID,

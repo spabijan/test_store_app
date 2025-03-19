@@ -1,4 +1,3 @@
-import 'package:decimal/decimal.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:test_store_app/screens/cart_screen/models/cart/provider/cart_provider.dart';
@@ -6,13 +5,13 @@ import 'package:test_store_app/screens/cart_screen/models/cart/provider/cart_pro
 part 'cart_total_amount.g.dart';
 
 @riverpod
-Decimal cartTotalAmount(Ref ref) {
+double cartTotalAmount(Ref ref) {
   final cart = ref.watch(cartProvider);
 
-  Decimal amount = Decimal.fromInt(0);
+  double amount = 0.0;
 
   for (final cartValue in cart.values) {
-    amount += cartValue.productPrice * Decimal.fromInt(cartValue.orderQuantity);
+    amount += cartValue.productPrice * cartValue.orderQuantity;
   }
   return amount;
 }

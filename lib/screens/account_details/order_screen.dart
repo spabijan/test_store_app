@@ -8,7 +8,6 @@ import 'package:test_store_app/screens/account_details/providers/order_count_pro
 import 'package:test_store_app/screens/account_details/providers/order_list_item_provider.dart';
 import 'package:test_store_app/screens/account_details/widgets/order_list_tile_widget.dart';
 import 'package:test_store_app/screens/cart_screen/widgets/cart_info_icon.dart';
-import 'package:test_store_app/screens/category_screen/models/order_view_model.dart';
 import 'package:test_store_app/screens/navigation/provider/navigation_providers.dart';
 import 'package:test_store_app/screens/navigation/route_names.dart';
 

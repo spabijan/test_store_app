@@ -20,19 +20,25 @@ class ProductDetailScreen extends ConsumerWidget {
             Consumer(
               builder: (_, WidgetRef ref, __) {
                 var wishlist = ref.watch(wishlistProvider);
-                return IconButton(onPressed: () {
-                  if (wishlist.containsKey(viewModel.productId)) {
-                    _removeFromWishlist(context, ref);
-                  } else {
-                    _addToWishlist(context, ref);
-                  }
-                }, icon: Consumer(
-                  builder: (_, WidgetRef ref, __) {
-                    return wishlist.containsKey(viewModel.productId)
-                        ? const Icon(Icons.favorite)
-                        : const Icon(Icons.favorite_border);
-                  },
-                ));
+                return wishlist.maybeWhen(
+                    data: (data) {
+                      return IconButton(onPressed: () {
+                        if (data.any((element) =>
+                            element.productId == viewModel.productId)) {
+                          _removeFromWishlist(context, ref);
+                        } else {
+                          _addToWishlist(context, ref);
+                        }
+                      }, icon: Consumer(
+                        builder: (_, WidgetRef ref, __) {
+                          return (data.any((element) =>
+                                  element.productId == viewModel.productId))
+                              ? const Icon(Icons.favorite)
+                              : const Icon(Icons.favorite_border);
+                        },
+                      ));
+                    },
+                    orElse: SizedBox.shrink);
               },
             )
           ],

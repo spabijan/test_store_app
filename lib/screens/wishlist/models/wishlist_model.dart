@@ -1,5 +1,4 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:decimal/decimal.dart';
 import 'package:test_store_app/screens/category_screen/models/product_view_model.dart';
 
 part 'wishlist_model.freezed.dart';
@@ -9,7 +8,7 @@ part 'wishlist_model.g.dart';
 class WishlistModel with _$WishlistModel {
   const factory WishlistModel(
       {required String productName,
-      required Decimal productPrice,
+      required double productPrice,
       required String category,
       required List<String> image,
       required String vendorID,

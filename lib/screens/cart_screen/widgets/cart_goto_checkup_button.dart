@@ -1,4 +1,3 @@
-import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -48,7 +47,7 @@ class CartCheckupButton extends StatelessWidget {
                   return Text('\$$totalPrice',
                       style: GoogleFonts.roboto(
                           fontWeight: FontWeight.w500,
-                          color: totalPrice > Decimal.fromInt(0)
+                          color: totalPrice > 0
                               ? const Color(0xffff6464)
                               : Colors.grey));
                 },

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:test_store_app/screens/navigation/provider/go_router_provider.dart';
 
-void main() {
+Future<void> main() async {
+  await Hive.initFlutter();
+  await Hive.openBox('wishlist');
   usePathUrlStrategy();
   runApp(
     const ProviderScope(

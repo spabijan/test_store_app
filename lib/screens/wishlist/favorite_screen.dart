@@ -30,22 +30,29 @@ class FavoriteScreen extends StatelessWidget {
         body: Consumer(
           builder: (_, WidgetRef ref, __) {
             final wishlist = ref.watch(wishlistProvider);
-            return wishlist.isEmpty
-                ? Center(
-                    child: Text('Your wishlist is empty',
-                        style: GoogleFonts.roboto(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.grey.shade900)))
-                : ListView.builder(
-                    itemCount: wishlist.length,
-                    itemBuilder: (context, index) {
-                      return ProviderScope(overrides: [
-                        wishlistListItemProvider
-                            .overrideWithValue(wishlist.values.toList()[index])
-                      ], child: const WishlistListTileItem());
-                    },
-                  );
+            return wishlist.maybeWhen(
+              orElse: SizedBox.shrink,
+              loading: () =>
+                  const Center(child: CircularProgressIndicator.adaptive()),
+              data: (data) {
+                return data.isEmpty
+                    ? Center(
+                        child: Text('Your wishlist is empty',
+                            style: GoogleFonts.roboto(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.grey.shade900)))
+                    : ListView.builder(
+                        itemCount: data.length,
+                        itemBuilder: (context, index) {
+                          return ProviderScope(overrides: [
+                            wishlistListItemProvider
+                                .overrideWithValue(data[index])
+                          ], child: const WishlistListTileItem());
+                        },
+                      );
+              },
+            );
           },
         ));
   }

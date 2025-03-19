@@ -1,4 +1,3 @@
-import 'package:decimal/decimal.dart';
 import 'package:test_store_app/model/models/product/product.dart';
 
 class ProductViewModel {
@@ -7,8 +6,7 @@ class ProductViewModel {
 
   final ProductModel _productModel;
   String get productName => _productModel.productName;
-  Decimal get productPrice =>
-      Decimal.parse(_productModel.productPrice.toString());
+  double get productPrice => _productModel.productPrice;
   int get quantity => _productModel.quantity.floor();
   String get description => _productModel.description;
   String get category => _productModel.category;

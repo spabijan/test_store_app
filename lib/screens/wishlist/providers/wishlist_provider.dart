@@ -1,38 +1,53 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:test_store_app/screens/wishlist/models/wishlist_model.dart';
+import 'package:test_store_app/screens/wishlist/providers/wishlist_repository_provider.dart';
 
 part 'wishlist_provider.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 int wishlistItemCount(Ref ref) {
-  return ref.watch(wishlistProvider).length;
+  return ref
+      .watch(wishlistProvider)
+      .maybeWhen(data: (data) => data.length, orElse: () => 0);
 }
 
 @Riverpod(keepAlive: true)
 class Wishlist extends _$Wishlist {
   @override
-  Map<String, WishlistModel> build() {
-    return {};
+  FutureOr<List<WishlistModel>> build() async {
+    return await _getWishlist();
   }
 
-  void addProductToWishlist(WishlistModel cartProduct) {
-    state = {...state, cartProduct.productId: cartProduct};
+  FutureOr<List<WishlistModel>> _getWishlist() async {
+    return await ref.read(wishlistRepositoryProvider).getWishlistItems();
   }
 
-  void removeWishlistItem(String id) {
-    if (state.containsKey(id)) {
-      Map<String, WishlistModel> newState = {};
-      for (final entry in state.entries) {
-        if (entry.key != id) {
-          newState.addEntries({entry});
-        }
-      }
-      state = newState;
-    }
+  void addProductToWishlist(WishlistModel wishlistProduct) async {
+    state = const AsyncLoading();
+
+    state = await AsyncValue.guard(
+      () async {
+        await ref
+            .read(wishlistRepositoryProvider)
+            .addToWishlist(model: wishlistProduct);
+        return [
+          ...state.value!,
+          wishlistProduct,
+        ];
+      },
+    );
   }
 
-  void clearCart() {
-    state = {};
+  void removeWishlistItem(String id) async {
+    state = const AsyncLoading();
+
+    state = await AsyncValue.guard(() async {
+      await ref.read(wishlistRepositoryProvider).removeFromWishlist(id: id);
+      return [
+        for (final wishlistProduct in state.value!)
+          if (wishlistProduct.productId != id) wishlistProduct
+      ];
+    });
   }
 }
