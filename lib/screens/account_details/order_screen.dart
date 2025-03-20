@@ -41,7 +41,12 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
             child: Consumer(
               builder: (_, WidgetRef ref, __) {
                 final ordersCount = ref.watch(orderCountProvider);
-                return AppBarWidget(itemCount: ordersCount, text: 'Orders');
+                return AppBarWidget(
+                    onBack: () {
+                      Navigator.of(context).pop();
+                    },
+                    itemCount: ordersCount,
+                    text: 'Orders');
               },
             )),
         body: orders.map(data: (data) {

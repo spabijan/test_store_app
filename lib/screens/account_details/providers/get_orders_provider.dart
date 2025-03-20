@@ -22,8 +22,10 @@ class Orders extends _$Orders {
   Future<List<OrderViewModel>> _loadUserOrders() async {
     final userID = ref.watch(loggedUserProvider)?.id;
     if (userID != null) {
-      var orders =
-          await ref.watch(ordersServiceProvider).getOrderById(buyerID: userID);
+      final token = ref.read(loginTokenProvider)!;
+      var orders = await ref
+          .read(ordersServiceProvider)
+          .getOrderById(buyerID: userID, loginToken: token);
       return [for (final order in orders) OrderViewModel(orderModel: order)];
     } else {
       return List.empty();

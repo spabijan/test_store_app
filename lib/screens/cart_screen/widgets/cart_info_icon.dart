@@ -7,9 +7,11 @@ class AppBarWidget extends StatelessWidget {
   const AppBarWidget({
     required this.itemCount,
     required this.text,
+    this.onBack,
     super.key,
   });
 
+  final VoidCallback? onBack;
   final int itemCount;
   final String text;
 
@@ -24,44 +26,49 @@ class AppBarWidget extends StatelessWidget {
               image: AssetImage(AssetIcons.cartb), fit: BoxFit.cover)),
       child: Stack(
         children: [
-          Positioned(
-              left: 322,
-              top: 52,
-              child: Stack(
-                children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 52.0, left: 16, right: 32),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (onBack != null)
+                  IconButton(
+                      onPressed: onBack,
+                      icon: const Icon(Icons.arrow_back, color: Colors.white)),
+                Text(
+                  text,
+                  style: GoogleFonts.lato(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
+                ),
+                const Spacer(),
+                Stack(clipBehavior: Clip.none, children: [
                   Image.asset(AssetIcons.not, width: 25, height: 25),
-                  itemCount > 0
-                      ? Positioned(
-                          top: 0,
-                          right: 0,
-                          child: Container(
-                            width: 20,
-                            height: 20,
-                            padding: const EdgeInsets.all(4),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
-                                color: Colors.yellow.shade800),
-                            child: Center(
-                                child: Text(itemCount.toString(),
-                                    style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 10))),
-                          ),
-                        )
-                      : const SizedBox.shrink()
-                ],
-              )),
-          Positioned(
-              left: 61,
-              top: 51,
-              child: Text(
-                text,
-                style: GoogleFonts.lato(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
-              ))
+                  if (itemCount > 0)
+                    Positioned(
+                      top: -8,
+                      right: -8,
+                      child: Container(
+                        width: 16,
+                        height: 16,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: Colors.yellow.shade800),
+                        child: Center(
+                            child: Text(itemCount.toString(),
+                                style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 10))),
+                      ),
+                    )
+                ]),
+              ],
+            ),
+          )
         ],
       ),
     );

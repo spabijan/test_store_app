@@ -24,6 +24,7 @@ class PlaceOrder extends _$PlaceOrder {
       await Future.forEach(cart, (product) async {
         final service = ref.read(ordersServiceProvider);
         final user = ref.read(loggedUserProvider)!;
+        final token = ref.read(loginTokenProvider)!;
         await service.uploadOrder(
             fullName: user.fullName,
             email: user.email,
@@ -36,7 +37,8 @@ class PlaceOrder extends _$PlaceOrder {
             vendorId: product.vendorID,
             city: user.city,
             state: user.state,
-            locality: user.locality);
+            locality: user.locality,
+            loginToken: token);
         // force order provider to redo fetching
         ref.invalidate(ordersProvider);
       });

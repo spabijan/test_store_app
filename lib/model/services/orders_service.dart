@@ -6,20 +6,20 @@ import 'package:http/http.dart' as http;
 import 'package:test_store_app/model/services/manage_http_response.dart';
 
 class OrdersService {
-  Future<void> uploadOrder({
-    required String fullName,
-    required String email,
-    required String productName,
-    required double productPrice,
-    required int quantity,
-    required String category,
-    required String image,
-    required String buyerId,
-    required String vendorId,
-    required String city,
-    required String state,
-    required String locality,
-  }) async {
+  Future<void> uploadOrder(
+      {required String fullName,
+      required String email,
+      required String productName,
+      required double productPrice,
+      required int quantity,
+      required String category,
+      required String image,
+      required String buyerId,
+      required String vendorId,
+      required String city,
+      required String state,
+      required String locality,
+      required String loginToken}) async {
     try {
       final order = OrderModel(
           fullName: fullName,
@@ -37,7 +37,7 @@ class OrdersService {
 
       var response = await http.post(
           Uri.parse('${MyGlobalVariables.uri}/api/orders'),
-          headers: MyGlobalVariables.headers,
+          headers: {...MyGlobalVariables.headers, 'x-auth-token': loginToken},
           body: jsonEncode(order.toJson()));
       HttpResponseUtils.checkForHttpResponseErrors(response: response);
     } catch (e) {
@@ -45,11 +45,12 @@ class OrdersService {
     }
   }
 
-  Future<List<OrderModel>> getOrderById({required String buyerID}) async {
+  Future<List<OrderModel>> getOrderById(
+      {required String buyerID, required String loginToken}) async {
     try {
       var response = await http.get(
           Uri.parse('${MyGlobalVariables.uri}/api/orders/$buyerID'),
-          headers: MyGlobalVariables.headers);
+          headers: {...MyGlobalVariables.headers, 'x-auth-token': loginToken});
 
       HttpResponseUtils.checkForHttpResponseErrors(response: response);
       List<dynamic> data = jsonDecode(response.body);

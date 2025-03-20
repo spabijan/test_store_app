@@ -11,16 +11,13 @@ class HttpError implements Exception {
 
 final class HttpResponseUtils {
   HttpResponseUtils._();
-  static var providerContext = ProviderContainer();
   static void checkForHttpResponseErrors({
     required http.Response response,
   }) {
     switch (response.statusCode) {
       case 200 || 201 || 204:
         return; //status ok - nothing to return
-      case 401:
-        providerContext.read(authProvider.notifier).logoutUser();
-      case 400 || 404:
+      case 400 || 404 || 401:
         throw HttpError(message: json.decode(response.body)['msg']);
       case 500:
         throw HttpError(message: json.decode(response.body)['error']);
