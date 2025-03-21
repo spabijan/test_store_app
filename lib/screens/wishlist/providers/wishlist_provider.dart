@@ -51,3 +51,10 @@ class Wishlist extends _$Wishlist {
     });
   }
 }
+
+@riverpod
+int wishlistCount(Ref ref) {
+  return ref
+      .read(wishlistProvider)
+      .maybeMap(data: (data) => data.value.length, orElse: () => 0);
+}

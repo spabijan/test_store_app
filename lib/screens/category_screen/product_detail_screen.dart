@@ -5,7 +5,6 @@ import 'package:test_store_app/screens/cart_screen/models/cart/cart_model.dart';
 import 'package:test_store_app/screens/cart_screen/models/cart/provider/cart_provider.dart';
 import 'package:test_store_app/screens/category_screen/components/related_products_component.dart';
 import 'package:test_store_app/screens/category_screen/models/product_view_model.dart';
-import 'package:test_store_app/screens/navigation/provider/navigation_providers.dart';
 import 'package:test_store_app/screens/wishlist/models/wishlist_model.dart';
 import 'package:test_store_app/screens/wishlist/providers/wishlist_provider.dart';
 
