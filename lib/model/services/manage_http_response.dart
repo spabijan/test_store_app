@@ -1,8 +1,6 @@
 import 'dart:convert';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
-import 'package:test_store_app/screens/authentication/repository/providers/auth_provider.dart';
 
 class HttpError implements Exception {
   HttpError({required this.message});

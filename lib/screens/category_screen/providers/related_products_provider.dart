@@ -4,19 +4,15 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:test_store_app/model/services/providers/product_service_provider.dart';
 import 'package:test_store_app/screens/category_screen/models/product_view_model.dart';
 
-part 'products_by_category_provider.g.dart';
+part 'related_products_provider.g.dart';
 
 @riverpod
-class ProductsByCategory extends _$ProductsByCategory {
+class RelatedProducts extends _$RelatedProducts {
   Object? _key;
-  late String _categoryName;
+  late String _productId;
 
   @override
-  FutureOr<List<ProductViewModel>> build(String categoryName) {
-    /** 
-      custom lifecycle - provider will dispose one minute after
-      the last listener unsubscribe
-    */
+  FutureOr<List<ProductViewModel>> build(String productId) {
     final keepAliveLink = ref.keepAlive();
     Timer? timer;
     ref.onCancel(() {
@@ -30,7 +26,7 @@ class ProductsByCategory extends _$ProductsByCategory {
     });
 
     _key = Object();
-    _categoryName = categoryName;
+    _productId = productId;
     return _loadProducts();
   }
 
@@ -48,9 +44,8 @@ class ProductsByCategory extends _$ProductsByCategory {
   }
 
   Future<List<ProductViewModel>> _loadProducts() async {
-    var products = await ref
-        .read(productServiceProvider)
-        .loadProductsByCategory(_categoryName);
+    var products =
+        await ref.read(productServiceProvider).loadRelatedProducts(_productId);
     return [
       for (final category in products) ProductViewModel(productModel: category)
     ];

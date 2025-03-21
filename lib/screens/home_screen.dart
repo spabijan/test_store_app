@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:test_store_app/screens/category_screen/components/popular_products_list_widget.dart';
+import 'package:test_store_app/screens/category_screen/components/popular_products_component.dart';
 import 'package:test_store_app/screens/category_screen/models/category_view_model.dart';
 import 'package:test_store_app/screens/category_screen/models/product_view_model.dart';
 import 'package:test_store_app/screens/components/banner/banners_list_widget.dart';
@@ -25,10 +25,9 @@ class HomeScreen extends ConsumerWidget {
             CategoryListWidget(
                 navigateToCategory: (categoryVM) =>
                     _gotoCategoryDetails(ref, categoryVM)),
-            PopularProductsListWidget(
-              navigateToProduct: (productVM) =>
-                  _gotoProductDetails(ref, productVM),
-            )
+            PopularProductsComponent(
+                navigateToProduct: (productVM) =>
+                    _gotoProductDetails(ref, productVM))
           ],
         ),
       ),

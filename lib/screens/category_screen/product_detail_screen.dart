@@ -3,7 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:test_store_app/screens/cart_screen/models/cart/cart_model.dart';
 import 'package:test_store_app/screens/cart_screen/models/cart/provider/cart_provider.dart';
+import 'package:test_store_app/screens/category_screen/components/related_products_component.dart';
 import 'package:test_store_app/screens/category_screen/models/product_view_model.dart';
+import 'package:test_store_app/screens/navigation/provider/navigation_providers.dart';
 import 'package:test_store_app/screens/wishlist/models/wishlist_model.dart';
 import 'package:test_store_app/screens/wishlist/providers/wishlist_provider.dart';
 
@@ -131,36 +133,42 @@ class ProductDetailScreen extends ConsumerWidget {
             Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      viewModel.category,
-                      style: GoogleFonts.roboto(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 1,
-                          color: Colors.grey),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'About:',
-                      style: GoogleFonts.lato(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 1.7,
-                          color: const Color.fromARGB(255, 45, 18, 9)),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      viewModel.description,
-                      style: GoogleFonts.roboto(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: 1,
-                          color: Colors.grey),
-                    )
-                  ],
-                ))
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        viewModel.category,
+                        style: GoogleFonts.roboto(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 1,
+                            color: Colors.grey),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'About:',
+                        style: GoogleFonts.lato(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 1.7,
+                            color: const Color.fromARGB(255, 45, 18, 9)),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        viewModel.description,
+                        style: GoogleFonts.roboto(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
+                            letterSpacing: 1,
+                            color: Colors.grey),
+                      )
+                    ])),
+            const SizedBox(height: 32),
+            RelatedProductsComponent(
+                relatedProduct: viewModel,
+                navigateToProduct: (productVM) => Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            ProductDetailScreen(viewModel: productVM))))
           ]),
         ),
         bottomSheet: Padding(
