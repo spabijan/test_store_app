@@ -31,9 +31,12 @@ class BannerListWidget extends ConsumerWidget {
           data: (data) {
             return PageView.builder(
                 itemCount: data.value.length,
-                itemBuilder: (context, index) => Image.network(
-                      data.value[index].image,
-                      fit: BoxFit.cover,
+                itemBuilder: (context, index) => ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.network(
+                        data.value[index].image,
+                        fit: BoxFit.cover,
+                      ),
                     ));
           },
           error: (error) {
