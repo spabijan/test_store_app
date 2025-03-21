@@ -40,45 +40,47 @@ class InnerCategoryContent extends ConsumerWidget {
                       letterSpacing: 1.7)),
             ),
             subcategories.map(
-                data: (data) => SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Column(
-                        children: List.generate((data.value.length / 7).ceil(),
-                            (index) {
-                          final start = index * 7;
-                          final end = (index + 1) * 7;
-                          return Padding(
-                              padding: const EdgeInsets.all(8.9),
-                              child: Row(
-                                children: data.value
-                                    .sublist(
-                                        start,
-                                        end > data.value.length
-                                            ? data.value.length
-                                            : end)
-                                    .map((e) => ProviderScope(
-                                            overrides: [
-                                              subcategoryItemProvider
-                                                  .overrideWithValue(e)
-                                            ],
-                                            child:
-                                                const SubcategoryTileWidget()))
-                                    .toList(),
-                              ));
-                        }),
+                data: (data) => data.value.isEmpty
+                    ? const Center(child: Text('No data found'))
+                    : SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Column(
+                          children: List.generate(
+                              (data.value.length / 7).ceil(), (index) {
+                            final start = index * 7;
+                            final end = (index + 1) * 7;
+                            return Padding(
+                                padding: const EdgeInsets.all(8.9),
+                                child: Row(
+                                  children: data.value
+                                      .sublist(
+                                          start,
+                                          end > data.value.length
+                                              ? data.value.length
+                                              : end)
+                                      .map((e) => ProviderScope(
+                                              overrides: [
+                                                subcategoryItemProvider
+                                                    .overrideWithValue(e)
+                                              ],
+                                              child:
+                                                  const SubcategoryTileWidget()))
+                                      .toList(),
+                                ));
+                          }),
+                        ),
                       ),
-                    ),
-                error: (_) => const SizedBox.shrink(),
+                error: (_) => const Center(child: Text('Ann error occurred')),
                 loading: (loading) =>
                     const CircularProgressIndicator.adaptive()),
             produts.map(
                 data: (data) {
-                  return Column(children: [
-                    const SectionHeaderWidget(
-                        title: 'Products', subtitle: 'View all'),
-                    data.value.isEmpty
-                        ? const Center(child: Text('No popular products'))
-                        : SizedBox(
+                  return data.value.isEmpty
+                      ? const Center(child: Text('No popular products'))
+                      : Column(children: [
+                          const SectionHeaderWidget(
+                              title: 'Products', subtitle: 'View all'),
+                          SizedBox(
                             height: 250,
                             child: ListView.builder(
                               scrollDirection: Axis.horizontal,
@@ -96,9 +98,9 @@ class InnerCategoryContent extends ConsumerWidget {
                               },
                             ),
                           ),
-                  ]);
+                        ]);
                 },
-                error: (_) => const SizedBox.shrink(),
+                error: (_) => const Center(child: Text('Ann error occurred')),
                 loading: (loading) =>
                     const CircularProgressIndicator.adaptive()),
           ],

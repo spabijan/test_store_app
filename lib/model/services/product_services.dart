@@ -31,7 +31,9 @@ class ProductServices {
       var response = await http.get(Uri.parse(request),
           headers: MyGlobalVariables.headers);
       HttpResponseUtils.checkForHttpResponseErrors(response: response);
-
+      if (response.statusCode == 204) {
+        return [];
+      }
       List<dynamic> data = jsonDecode(response.body);
       return [for (final datum in data) ProductModel.fromJson(datum)];
     } catch (e) {

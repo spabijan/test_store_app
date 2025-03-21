@@ -7,13 +7,20 @@ import 'dart:convert';
 final class SubcategoryService {
   Future<List<SubcategoryModel>> loadSubcategoriesByName(
       String categoryName) async {
-    var response = await http.get(
-        Uri.parse(
-            '${MyGlobalVariables.uri}/api/category/$categoryName/subcategories'),
-        headers: MyGlobalVariables.headers);
+    try {
+      var response = await http.get(
+          Uri.parse(
+              '${MyGlobalVariables.uri}/api/category/$categoryName/subcategories'),
+          headers: MyGlobalVariables.headers);
 
-    HttpResponseUtils.checkForHttpResponseErrors(response: response);
-    List<dynamic> data = jsonDecode(response.body);
-    return [for (final datum in data) SubcategoryModel.fromJson(datum)];
+      HttpResponseUtils.checkForHttpResponseErrors(response: response);
+      if (response.statusCode == 204) {
+        return [];
+      }
+      List<dynamic> data = jsonDecode(response.body);
+      return [for (final datum in data) SubcategoryModel.fromJson(datum)];
+    } catch (e) {
+      rethrow;
+    }
   }
 }
