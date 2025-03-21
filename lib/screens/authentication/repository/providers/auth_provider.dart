@@ -4,6 +4,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:test_store_app/model/models/user/user.dart';
 import 'package:test_store_app/screens/authentication/repository/providers/auth_repositories.dart';
 import 'package:test_store_app/model/services/providers/auth_controller_provider.dart';
+import 'package:test_store_app/screens/cart_screen/models/cart/provider/cart_provider.dart';
+import 'package:test_store_app/screens/wishlist/providers/wishlist_provider.dart';
 
 part 'auth_provider.g.dart';
 
@@ -53,7 +55,8 @@ class Auth extends _$Auth {
     state = await AsyncValue.guard(() async {
       await ref.read(tokenRepositoryProvider).deleteToken();
       await ref.read(userRepositoryProvider).deleteUser();
-
+      await ref.read(cartProvider.notifier).clearCart();
+      await ref.read(wishlistProvider.notifier).clearWishList();
       return AuthState(tokenJson: null, user: null);
     });
   }

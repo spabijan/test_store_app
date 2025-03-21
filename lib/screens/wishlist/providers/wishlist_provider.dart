@@ -50,6 +50,14 @@ class Wishlist extends _$Wishlist {
       ];
     });
   }
+
+  Future<void> clearWishList() async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      await ref.read(wishlistRepositoryProvider).clearWishlist();
+      return [];
+    });
+  }
 }
 
 @riverpod

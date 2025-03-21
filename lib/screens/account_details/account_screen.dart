@@ -349,7 +349,7 @@ class AccountScreen extends ConsumerWidget {
             ),
             ListTile(
               onTap: () {
-                ref.read(authProvider.notifier).logoutUser();
+                _logout(context, ref);
               },
               leading: Image.asset(
                 'assets/icons/logout.png',
@@ -365,6 +365,44 @@ class AccountScreen extends ConsumerWidget {
         ),
       ),
       bottomNavigationBar: NavigationTapBar(),
+    );
+  }
+
+  void _logout(BuildContext context, WidgetRef ref) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          title: Text('Are you sure',
+              style: GoogleFonts.montserrat(
+                  fontWeight: FontWeight.bold, fontSize: 20)),
+          content: Text('Do you really want to logout',
+              style: GoogleFonts.montserrat(
+                  color: Colors.grey.shade700, fontSize: 16)),
+          actions: [
+            TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text('Cancell',
+                    style: GoogleFonts.montserrat(
+                        color: Colors.grey.shade700,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 16))),
+            ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.redAccent,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10))),
+                onPressed: () => ref.read(authProvider.notifier).logoutUser(),
+                child: Text('Logout',
+                    style: GoogleFonts.montserrat(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16)))
+          ],
+        );
+      },
     );
   }
 }

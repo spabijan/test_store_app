@@ -33,4 +33,12 @@ class WishlistRepository {
       rethrow;
     }
   }
+
+  Future<void> clearWishlist() async {
+    try {
+      await wishlistBox.clear();
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
