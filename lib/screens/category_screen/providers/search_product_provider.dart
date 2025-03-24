@@ -12,6 +12,7 @@ class SearchProduct extends _$SearchProduct {
 
   @override
   FutureOr<List<ProductViewModel>> build({required String query}) {
+    _query = query;
     return _searchQuery();
   }
 
