@@ -10,12 +10,12 @@ import 'package:test_store_app/screens/authentication/repository/providers/auth_
 import 'package:test_store_app/screens/cart_screen/cart_screen.dart';
 import 'package:test_store_app/screens/cart_screen/checkout_screen.dart';
 import 'package:test_store_app/screens/cart_screen/shipping_address_screen.dart';
-import 'package:test_store_app/screens/category_screen/category_screen.dart';
-import 'package:test_store_app/screens/category_screen/inner_category_screen.dart';
-import 'package:test_store_app/screens/category_screen/product_detail_screen.dart';
+import 'package:test_store_app/screens/category_screen/screens/category_screen.dart';
+import 'package:test_store_app/screens/category_screen/screens/inner_category_screen.dart';
+import 'package:test_store_app/screens/category_screen/screens/product_detail_screen.dart';
+import 'package:test_store_app/screens/category_screen/screens/subcategory_screen.dart';
 import 'package:test_store_app/screens/wishlist/favorite_screen.dart';
 import 'package:test_store_app/screens/home_screen.dart';
-import 'package:test_store_app/screens/navigation/provider/navigation_providers.dart';
 import 'package:test_store_app/screens/navigation/provider/splash_screen_ready_provider.dart';
 import 'package:test_store_app/screens/navigation/route_names.dart';
 import 'package:test_store_app/screens/navigation/splash_screen.dart';
@@ -80,35 +80,11 @@ GoRouter router(Ref ref) {
           builder: (context, state) => const RegisterScreen(),
         ),
         GoRoute(
-            path: '/home',
-            name: RouteNames.home,
-            pageBuilder: (context, state) =>
-                const NoTransitionPage(child: HomeScreen()),
-            routes: [
-              GoRoute(
-                  path: '/category',
-                  name: RouteNames.dashboardCategory,
-                  builder: (context, state) {
-                    final category = ref.watch(selectedCategoryProvider);
-                    return InnerCategoryScreen(categoryViewModel: category!);
-                  },
-                  routes: [
-                    GoRoute(
-                        path: '/product',
-                        name: RouteNames.categoryProduct,
-                        builder: (context, state) {
-                          final model = ref.watch(selectedProductProvider);
-                          return ProductDetailScreen(viewModel: model!);
-                        })
-                  ]),
-              GoRoute(
-                  path: '/product',
-                  name: RouteNames.dashboardProduct,
-                  builder: (context, state) {
-                    final model = ref.watch(selectedProductProvider);
-                    return ProductDetailScreen(viewModel: model!);
-                  })
-            ]),
+          path: '/home',
+          name: RouteNames.home,
+          pageBuilder: (context, state) =>
+              const NoTransitionPage(child: HomeScreen()),
+        ),
         GoRoute(
           path: '/favourites',
           name: RouteNames.favourites,
@@ -152,18 +128,10 @@ GoRouter router(Ref ref) {
                 const NoTransitionPage(child: AccountScreen()),
             routes: [
               GoRoute(
-                  path: '/orders',
-                  name: RouteNames.accountOrders,
-                  builder: (context, state) => const OrderScreen(),
-                  routes: [
-                    GoRoute(
-                        path: '/orderDetails',
-                        name: RouteNames.accountOrdersDetails,
-                        builder: (context, state) {
-                          final model = ref.watch(selectedOrderDetailsProvider);
-                          return OrderDetailsScreen(viewModel: model!);
-                        })
-                  ])
+                path: '/orders',
+                name: RouteNames.accountOrders,
+                builder: (context, state) => const OrderScreen(),
+              )
             ]),
       ]);
 }

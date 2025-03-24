@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:test_store_app/model/services/manage_http_response.dart';
+import 'package:test_store_app/screens/account_details/order_details_screen.dart';
 import 'package:test_store_app/screens/account_details/providers/delete_order_provider.dart';
 import 'package:test_store_app/screens/account_details/providers/get_orders_provider.dart';
 import 'package:test_store_app/screens/account_details/providers/order_count_provider.dart';
 import 'package:test_store_app/screens/account_details/providers/order_list_item_provider.dart';
 import 'package:test_store_app/screens/account_details/widgets/order_list_tile_widget.dart';
 import 'package:test_store_app/screens/cart_screen/widgets/cart_info_icon.dart';
-import 'package:test_store_app/screens/navigation/provider/navigation_providers.dart';
 import 'package:test_store_app/screens/navigation/route_names.dart';
 
 class OrderScreen extends ConsumerStatefulWidget {
@@ -62,11 +62,10 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
                         ],
                         child: InkWell(
                             onTap: () {
-                              ref
-                                  .read(selectedOrderDetailsProvider.notifier)
-                                  .state = orderVM;
-                              GoRouter.of(context)
-                                  .goNamed(RouteNames.accountOrdersDetails);
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) =>
+                                    OrderDetailsScreen(viewModel: orderVM),
+                              ));
                             },
                             child: const OrderListTileWidget()));
                   },

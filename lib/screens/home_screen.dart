@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:test_store_app/screens/category_screen/components/popular_products_component.dart';
-import 'package:test_store_app/screens/category_screen/inner_category_screen.dart';
+import 'package:test_store_app/screens/category_screen/screens/inner_category_screen.dart';
 import 'package:test_store_app/screens/category_screen/models/category_view_model.dart';
 import 'package:test_store_app/screens/category_screen/models/product_view_model.dart';
-import 'package:test_store_app/screens/category_screen/product_detail_screen.dart';
+import 'package:test_store_app/screens/category_screen/screens/product_detail_screen.dart';
 import 'package:test_store_app/screens/category_screen/providers/popular_products_provider.dart';
 import 'package:test_store_app/screens/category_screen/providers/top_rated_products_provider.dart';
 import 'package:test_store_app/screens/components/banner/banners_list_widget.dart';

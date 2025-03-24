@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:test_store_app/screens/category_screen/models/subcategory_view_model.dart';
 import 'package:test_store_app/screens/category_screen/providers/category_item_provider.dart';
 import 'package:test_store_app/screens/category_screen/providers/category_provider.dart';
 import 'package:test_store_app/screens/category_screen/providers/subcategories_provider.dart';
 import 'package:test_store_app/screens/category_screen/providers/subcategory_item_provider.dart';
+import 'package:test_store_app/screens/category_screen/screens/subcategory_screen.dart';
 import 'package:test_store_app/screens/navigation/navigation_tapbar.dart';
 import 'package:test_store_app/model/services/manage_http_response.dart';
 import 'package:test_store_app/screens/category_screen/models/category_view_model.dart';
 import 'package:test_store_app/screens/category_screen/components/category_item_widget.dart';
+import 'package:test_store_app/screens/navigation/provider/go_router_provider.dart';
+import 'package:test_store_app/screens/navigation/route_names.dart';
 import 'package:test_store_app/screens/widgets/header_widget.dart';
 import 'package:test_store_app/screens/category_screen/components/subcategory_list_item.dart';
 
@@ -94,11 +98,15 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
                                             crossAxisCount: 3,
                                             mainAxisSpacing: 4,
                                             crossAxisSpacing: 8),
-                                    itemBuilder: (context, index) =>
-                                        ProviderScope(overrides: [
-                                      subcategoryItemProvider
-                                          .overrideWithValue(data.value[index])
-                                    ], child: const SubcategoryListItem()),
+                                    itemBuilder: (context, index) => InkWell(
+                                      onTap: () => _gotoSubcategoryScreen(
+                                          data.value[index]),
+                                      child: ProviderScope(overrides: [
+                                        subcategoryItemProvider
+                                            .overrideWithValue(
+                                                data.value[index])
+                                      ], child: const SubcategoryListItem()),
+                                    ),
                                   ),
                               error: (errorState) {
                                 var e = errorState.error;
@@ -117,6 +125,12 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
       ),
       bottomNavigationBar: NavigationTapBar(),
     );
+  }
+
+  void _gotoSubcategoryScreen(SubcategoryViewModel subcategory) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => SubcategoryScreen(subcategory: subcategory),
+    ));
   }
 
   void _setDefaultCategory() {

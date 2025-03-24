@@ -5,8 +5,8 @@ import 'package:test_store_app/screens/category_screen/components/inner_category
 import 'package:test_store_app/screens/category_screen/models/category_view_model.dart';
 import 'package:test_store_app/screens/category_screen/models/product_view_model.dart';
 import 'package:test_store_app/screens/category_screen/providers/category_item_provider.dart';
+import 'package:test_store_app/screens/category_screen/screens/product_detail_screen.dart';
 import 'package:test_store_app/screens/navigation/provider/go_router_provider.dart';
-import 'package:test_store_app/screens/navigation/provider/navigation_providers.dart';
 import 'package:test_store_app/screens/navigation/route_names.dart';
 import 'package:test_store_app/screens/widgets/header_widget.dart';
 
@@ -55,8 +55,8 @@ class _InnerCategoryScreenState extends ConsumerState<InnerCategoryScreen> {
   }
 
   void _navigateToProductDetails(ProductViewModel product) {
-    ref.read(selectedProductProvider.notifier).state = product;
-
-    ref.read(routerProvider).goNamed(RouteNames.categoryProduct);
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => ProductDetailScreen(viewModel: product),
+    ));
   }
 }
