@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:test_store_app/screens/category_screen/components/product_item_widget.dart';
 import 'package:test_store_app/screens/category_screen/components/subcategory_tile_widget.dart';
 import 'package:test_store_app/screens/category_screen/models/product_view_model.dart';
+import 'package:test_store_app/screens/category_screen/models/subcategory_view_model.dart';
 import 'package:test_store_app/screens/category_screen/providers/category_item_provider.dart';
 import 'package:test_store_app/screens/category_screen/providers/product_item_provider.dart';
 import 'package:test_store_app/screens/category_screen/providers/products_by_category_provider.dart';
@@ -14,12 +15,13 @@ import 'package:test_store_app/screens/components/banner/inner_banner_widget.dar
 import 'package:test_store_app/screens/widgets/section_header_widget.dart';
 
 class InnerCategoryContent extends ConsumerWidget {
-  const InnerCategoryContent({
-    required this.navigateToProductDetails,
-    super.key,
-  });
+  const InnerCategoryContent(
+      {required this.navigateToProductDetails,
+      required this.navigateToSubcategory,
+      super.key});
 
   final Function(ProductViewModel product) navigateToProductDetails;
+  final Function(SubcategoryViewModel subcategory) navigateToSubcategory;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -58,13 +60,17 @@ class InnerCategoryContent extends ConsumerWidget {
                                           end > data.value.length
                                               ? data.value.length
                                               : end)
-                                      .map((e) => ProviderScope(
-                                              overrides: [
-                                                subcategoryItemProvider
-                                                    .overrideWithValue(e)
-                                              ],
-                                              child:
-                                                  const SubcategoryTileWidget()))
+                                      .map((e) => InkWell(
+                                            onTap: () =>
+                                                navigateToSubcategory(e),
+                                            child: ProviderScope(
+                                                overrides: [
+                                                  subcategoryItemProvider
+                                                      .overrideWithValue(e)
+                                                ],
+                                                child:
+                                                    const SubcategoryTileWidget()),
+                                          ))
                                       .toList(),
                                 ));
                           }),

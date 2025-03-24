@@ -11,8 +11,6 @@ import 'package:test_store_app/screens/navigation/navigation_tapbar.dart';
 import 'package:test_store_app/model/services/manage_http_response.dart';
 import 'package:test_store_app/screens/category_screen/models/category_view_model.dart';
 import 'package:test_store_app/screens/category_screen/components/category_item_widget.dart';
-import 'package:test_store_app/screens/navigation/provider/go_router_provider.dart';
-import 'package:test_store_app/screens/navigation/route_names.dart';
 import 'package:test_store_app/screens/widgets/header_widget.dart';
 import 'package:test_store_app/screens/category_screen/components/subcategory_list_item.dart';
 
