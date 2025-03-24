@@ -32,6 +32,11 @@ class ProductServices {
         '${MyGlobalVariables.uri}/api/product/subcategory/$subcategory');
   }
 
+  Future<List<ProductModel>> searchProduct({required String query}) async {
+    return await _loadProductsByRequest(
+        '${MyGlobalVariables.uri}/api/search-product?query=$query');
+  }
+
   Future<List<ProductModel>> _loadProductsByRequest(String request) async {
     try {
       var response = await http.get(Uri.parse(request),

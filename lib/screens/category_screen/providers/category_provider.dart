@@ -11,14 +11,6 @@ class Categories extends _$Categories {
     return _loadCategories();
   }
 
-  void loadCategories() async {
-    state = const AsyncLoading();
-
-    state = await AsyncValue.guard(() async {
-      return _loadCategories();
-    });
-  }
-
   Future<List<CategoryViewModel>> _loadCategories() async {
     var categories = await ref.watch(categoryServiceProvider).loadCategories();
     return [

@@ -33,19 +33,6 @@ class Subcategories extends _$Subcategories {
     return _loadSubcategories();
   }
 
-  void loadSubcategories() async {
-    state = const AsyncLoading();
-    final key = _key;
-
-    final newState = await AsyncValue.guard(() async {
-      return _loadSubcategories();
-    });
-
-    if (key == _key) {
-      state = newState;
-    }
-  }
-
   Future<List<SubcategoryViewModel>> _loadSubcategories() async {
     var categories = await ref
         .watch(subcategoryServiceProvider)

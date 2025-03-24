@@ -30,22 +30,9 @@ class RelatedProducts extends _$RelatedProducts {
     return _loadProducts();
   }
 
-  void loadProducts() async {
-    state = const AsyncLoading();
-    final key = _key;
-
-    final newState = await AsyncValue.guard(() async {
-      return _loadProducts();
-    });
-
-    if (key == _key) {
-      state = newState;
-    }
-  }
-
   Future<List<ProductViewModel>> _loadProducts() async {
     var products =
-        await ref.read(productServiceProvider).loadRelatedProducts(_productId);
+        await ref.watch(productServiceProvider).loadRelatedProducts(_productId);
     return [
       for (final category in products) ProductViewModel(productModel: category)
     ];

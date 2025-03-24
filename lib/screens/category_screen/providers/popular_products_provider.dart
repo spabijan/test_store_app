@@ -11,14 +11,6 @@ class PopularProducts extends _$PopularProducts {
     return _loadPopularProducts();
   }
 
-  void loadPopularProducts() async {
-    state = const AsyncLoading();
-
-    state = await AsyncValue.guard(() async {
-      return _loadPopularProducts();
-    });
-  }
-
   Future<List<ProductViewModel>> _loadPopularProducts() async {
     var products =
         await ref.watch(productServiceProvider).loadPopularProducts();
