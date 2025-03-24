@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:test_store_app/screens/category_screen/components/product_item_widget.dart';
 import 'package:test_store_app/screens/category_screen/components/product_list_grid_widget.dart';
 import 'package:test_store_app/screens/category_screen/models/product_view_model.dart';
 import 'package:test_store_app/screens/category_screen/models/subcategory_view_model.dart';
 import 'package:test_store_app/screens/category_screen/providers/product_by_subcategory_provder.dart';
-import 'package:test_store_app/screens/category_screen/providers/product_item_provider.dart';
 import 'package:test_store_app/screens/category_screen/screens/product_detail_screen.dart';
 
 class SubcategoryScreen extends ConsumerStatefulWidget {
