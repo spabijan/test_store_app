@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:test_store_app/screens/cart_screen/models/cart/cart_model.dart';
 import 'package:test_store_app/screens/cart_screen/models/cart/provider/cart_provider.dart';
+import 'package:test_store_app/screens/cart_screen/models/cart/provider/cart_total_amount.dart';
 import 'package:test_store_app/screens/category_screen/models/product_view_model.dart';
 import 'package:test_store_app/screens/category_screen/providers/product_item_provider.dart';
 import 'package:test_store_app/screens/wishlist/models/wishlist_model.dart';
@@ -74,14 +75,15 @@ class ProductItemWidget extends ConsumerWidget {
                     right: 8,
                     child: Consumer(
                       builder: (_, WidgetRef ref, __) {
-                        final cartRepository = ref.watch(cartProvider);
-                        return cartRepository.maybeMap(
-                            data: (data) => IconButton(
+                        final cartRepositoryReady =
+                            ref.watch(cartRepositoryReadyProvider);
+                        return cartRepositoryReady
+                            ? IconButton(
                                 onPressed: () {
                                   _addToCart(ref, product, context);
                                 },
-                                icon: const Icon(Icons.shopping_cart_outlined)),
-                            orElse: SizedBox.shrink);
+                                icon: const Icon(Icons.shopping_cart_outlined))
+                            : const SizedBox.shrink();
                       },
                     ))
               ],

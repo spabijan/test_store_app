@@ -31,3 +31,9 @@ List<CartModel> cartElement(Ref ref) {
   final cart = ref.watch(cartProvider);
   return cart.maybeWhen(orElse: List.empty, data: (data) => data);
 }
+
+@riverpod
+bool cartRepositoryReady(Ref ref) {
+  final cart = ref.watch(cartProvider);
+  return cart.hasValue;
+}

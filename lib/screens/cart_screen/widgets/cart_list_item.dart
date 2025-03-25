@@ -109,7 +109,7 @@ class CartListItem extends ConsumerWidget {
 
   void _deleteItem(WidgetRef ref, CartModel cartItem) {
     {
-      ref.read(cartProvider.notifier).decrementCartItem(cartItem.productId);
+      ref.read(cartProvider.notifier).removeCartItem(cartItem.productId);
     }
   }
 }
