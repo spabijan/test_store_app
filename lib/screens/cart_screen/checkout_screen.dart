@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:test_store_app/model/models/user/user_methods.dart';
 import 'package:test_store_app/model/services/manage_http_response.dart';
-import 'package:test_store_app/screens/authentication/repository/providers/auth_state_details_provider.dart';
 import 'package:test_store_app/screens/cart_screen/models/cart/provider/cart_provider.dart';
-import 'package:test_store_app/screens/cart_screen/constants/payment_types.dart';
+import 'package:test_store_app/screens/cart_screen/models/cart/provider/cart_total_amount.dart';
+import 'package:test_store_app/screens/cart_screen/models/cart/provider/place_order_button_state_provider.dart';
+import 'package:test_store_app/screens/cart_screen/providers/create_payment_process_provider.dart';
 import 'package:test_store_app/screens/cart_screen/providers/place_order_provider.dart';
-import 'package:test_store_app/screens/cart_screen/providers/selected_payment_method_provider.dart';
 import 'package:test_store_app/screens/cart_screen/widgets/blue_button.dart';
 import 'package:test_store_app/screens/cart_screen/widgets/cart_chekout_list_row.dart';
 import 'package:test_store_app/screens/cart_screen/widgets/cart_payment_method_widget.dart';
@@ -29,12 +29,34 @@ class CheckoutScreen extends ConsumerWidget {
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text(error.toString())));
         }
-      });
-      next.whenData((value) {
+      }, data: (data) {
         ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Successfully placed order')));
         ref.watch(cartProvider.notifier).clearCart();
         Navigator.of(context).pop();
+      });
+    });
+
+    ref.listen<AsyncValue<Map<String, dynamic>>>(createPaymentProcessProvider,
+        (previous, next) {
+      next.whenOrNull(error: (error, stackTrace) {
+        if (error is HttpError) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text(error.message)));
+        } else {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text(error.toString())));
+        }
+      }, data: (paymentIntent) async {
+        if (paymentIntent.isNotEmpty) {
+          await Stripe.instance.initPaymentSheet(
+              paymentSheetParameters: SetupPaymentSheetParameters(
+                  paymentIntentClientSecret: paymentIntent['client_secret'],
+                  merchantDisplayName: 'Wiecznie Marudny Kitku'));
+          await Stripe.instance.presentPaymentSheet();
+          final cartEntries = ref.read(cartElementProvider);
+          ref.read(placeOrderProvider.notifier).placeOrder(cartEntries);
+        }
       });
     });
 
@@ -86,51 +108,41 @@ class CheckoutScreen extends ConsumerWidget {
         padding: const EdgeInsets.only(bottom: 42, top: 8, left: 8, right: 8),
         child: Consumer(
           builder: (_, WidgetRef ref, __) {
-            final paymentType = ref.watch(selectedPaymentMethodProvider);
-            final cart = ref.watch(cartProvider);
-            return cart.maybeWhen(
-              orElse: SizedBox.shrink,
-              data: (data) {
-                return BlueButton(
-                    onTap: () {
-                      if (_userHasShippingData(ref)) {
-                        switch (paymentType) {
-                          case PaymentTypes.stripe:
-                            throw UnimplementedError();
-                          case PaymentTypes.cash:
-                            ref
-                                .read(placeOrderProvider.notifier)
-                                .placeOrder(data);
-                        }
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text('Missing address data')));
-                      }
-                    },
-                    textButton: _getTextButton(paymentType, ref));
-              },
-            );
+            final buttonState = ref.watch(placeOrderButtonStateProvider);
+            return switch (buttonState) {
+              MissingAddressDataCheckoutButtonState() => BlueButton(
+                  textButton: buttonState.message,
+                  onTap: () => _navigateToAddress(context)),
+              StripeSelectedCheckoutButtonState() => BlueButton(
+                  textButton: buttonState.message,
+                  onTap: () => _handleStripePayment(ref)),
+              CashSelectedCheckoutButtonState() => BlueButton(
+                  textButton: buttonState.message,
+                  onTap: () => _handleCashpayment(ref)),
+              LoadingCheckoutButtonState() => const SizedBox(
+                  height: 56,
+                  child: Center(child: CircularProgressIndicator.adaptive()))
+            };
           },
         ),
       ),
     );
   }
 
+  void _handleCashpayment(WidgetRef ref) {
+    final cart = ref.read(cartElementProvider);
+    ref.read(placeOrderProvider.notifier).placeOrder(cart);
+  }
+
+  void _handleStripePayment(WidgetRef ref) {
+    final amount = ref.read(cartTotalAmountProvider);
+
+    ref.read(createPaymentProcessProvider.notifier).createPaymentIntend(
+        amount: (amount * 100).toInt(), // payment provider expects cents
+        currency: 'usd');
+  }
+
   void _navigateToAddress(BuildContext context) {
     GoRouter.of(context).goNamed(RouteNames.cartShippingAddress);
-  }
-
-  bool _userHasShippingData(WidgetRef ref) {
-    final user = ref.watch(loggedUserProvider);
-    return user != null && user.hasShippingData();
-  }
-
-  String _getTextButton(PaymentTypes paymentType, WidgetRef ref) {
-    if (!_userHasShippingData(ref)) {
-      return 'Please enter Shipping Address';
-    } else {
-      return paymentType.checkoutMessage;
-    }
   }
 }

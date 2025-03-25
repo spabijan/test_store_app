@@ -69,4 +69,20 @@ class OrdersService {
       rethrow;
     }
   }
+
+  Future<Map<String, dynamic>> createPaymentIntent(
+      {required int amount,
+      required String currency,
+      required String loginToken}) async {
+    try {
+      final response = await http.post(
+          Uri.parse('${MyGlobalVariables.uri}/api/payment-intent'),
+          headers: {...MyGlobalVariables.headers, 'x-auth-token': loginToken},
+          body: jsonEncode({'amount': amount, 'currency': currency}));
+      HttpResponseUtils.checkForHttpResponseErrors(response: response);
+      return json.decode(response.body);
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

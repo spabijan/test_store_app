@@ -7,12 +7,12 @@ part 'cart_provider.g.dart';
 @Riverpod(keepAlive: true)
 class Cart extends _$Cart {
   @override
-  FutureOr<List<CartModel>> build() {
-    return _getCartItems();
+  FutureOr<List<CartModel>> build() async {
+    return await _getCartItems();
   }
 
   Future<List<CartModel>> _getCartItems() async {
-    return await ref.read(cartRepositoryProvider).getCartItems();
+    return await ref.watch(cartRepositoryProvider).getCartItems();
   }
 
   void addProductToCart(CartModel cartProduct) async {

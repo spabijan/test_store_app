@@ -39,9 +39,9 @@ class PlaceOrder extends _$PlaceOrder {
             state: user.state,
             locality: user.locality,
             loginToken: token);
-        // force order provider to redo fetching
-        ref.invalidate(ordersProvider);
       });
+      // force order provider to redo fetching
+      ref.invalidate(ordersProvider);
     });
 
     if (key == _key) {

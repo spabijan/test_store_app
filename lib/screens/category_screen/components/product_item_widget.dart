@@ -72,11 +72,18 @@ class ProductItemWidget extends ConsumerWidget {
                 Positioned(
                     bottom: 4,
                     right: 8,
-                    child: IconButton(
-                        onPressed: () {
-                          _addToCart(ref, product, context);
-                        },
-                        icon: const Icon(Icons.shopping_cart_outlined)))
+                    child: Consumer(
+                      builder: (_, WidgetRef ref, __) {
+                        final cartRepository = ref.watch(cartProvider);
+                        return cartRepository.maybeMap(
+                            data: (data) => IconButton(
+                                onPressed: () {
+                                  _addToCart(ref, product, context);
+                                },
+                                icon: const Icon(Icons.shopping_cart_outlined)),
+                            orElse: SizedBox.shrink);
+                      },
+                    ))
               ],
             ),
           ),

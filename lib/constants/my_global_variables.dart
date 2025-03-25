@@ -1,8 +1,9 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 final class MyGlobalVariables {
   MyGlobalVariables._();
-  // static const String uri = 'http://192.168.0.103:3000';
-  static const String uri =
-      'https://spabijan-webapp-ff60baaca37e.herokuapp.com';
+  //static String uri = dotenv.get('BACKEND_API_SERVER_TEST');
+  static String uri = dotenv.get('BACKEND_API_SERVER');
   static const Map<String, String> headers = {
     'Content-Type': 'application/json;  charset=UTF-8'
   };

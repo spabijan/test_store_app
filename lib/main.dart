@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -9,6 +11,11 @@ Future<void> main() async {
   await Hive.initFlutter();
   await Hive.openBox('wishlist');
   await Hive.openBox('cart');
+  await dotenv.load(fileName: '.env');
+
+  WidgetsFlutterBinding.ensureInitialized();
+  Stripe.publishableKey = dotenv.get('PUBLIC_API_KEY_STRIPE');
+  await Stripe.instance.applySettings();
   usePathUrlStrategy();
   runApp(
     const ProviderScope(
