@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:test_store_app/r.dart';
 import 'package:test_store_app/screens/account_details/providers/get_orders_provider.dart';
 import 'package:test_store_app/screens/authentication/repository/providers/auth_provider.dart';
 import 'package:test_store_app/screens/authentication/repository/providers/auth_state_details_provider.dart';
@@ -360,6 +361,23 @@ class AccountScreen extends ConsumerWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            ListTile(
+              onTap: () {
+                _delete(context, ref);
+              },
+              leading: Image.asset(
+                AssetIcons.help,
+              ),
+              title: Text(
+                'Delete account',
+                style: GoogleFonts.montserrat(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             )
           ],
         ),
@@ -368,7 +386,18 @@ class AccountScreen extends ConsumerWidget {
     );
   }
 
+  void _delete(BuildContext context, WidgetRef ref) {
+    _showActionDialog(context, 'Do you really want to delete account', 'Delete',
+        () => ref.read(authProvider.notifier).deleteUser());
+  }
+
   void _logout(BuildContext context, WidgetRef ref) {
+    _showActionDialog(context, 'Do you really want to logout', 'Logout',
+        () => ref.read(authProvider.notifier).logoutUser());
+  }
+
+  void _showActionDialog(BuildContext context, String message,
+      String buttonMessage, Function() action) {
     showDialog(
       context: context,
       builder: (context) {
@@ -378,7 +407,7 @@ class AccountScreen extends ConsumerWidget {
           title: Text('Are you sure',
               style: GoogleFonts.montserrat(
                   fontWeight: FontWeight.bold, fontSize: 20)),
-          content: Text('Do you really want to logout',
+          content: Text(message,
               style: GoogleFonts.montserrat(
                   color: Colors.grey.shade700, fontSize: 16)),
           actions: [
@@ -394,8 +423,8 @@ class AccountScreen extends ConsumerWidget {
                     backgroundColor: Colors.redAccent,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10))),
-                onPressed: () => ref.read(authProvider.notifier).logoutUser(),
-                child: Text('Logout',
+                onPressed: () => action(),
+                child: Text(buttonMessage,
                     style: GoogleFonts.montserrat(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,

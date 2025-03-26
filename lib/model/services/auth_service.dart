@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:flutter/cupertino.dart';
 import 'package:test_store_app/constants/my_global_variables.dart';
 import 'package:test_store_app/model/models/user/user.dart';
 import 'package:http/http.dart' as http;
@@ -58,6 +58,14 @@ class AuthService {
         Uri.parse('${MyGlobalVariables.uri}/api/verify-otp'),
         body: json.encode({'email': email, 'otp': otp}),
         headers: MyGlobalVariables.headers);
+    HttpResponseUtils.checkForHttpResponseErrors(response: response);
+  }
+
+  Future<void> deleteAccount(
+      {required String id, required String authToken}) async {
+    final http.Response response = await http.delete(
+        Uri.parse('${MyGlobalVariables.uri}/api/users/$id'),
+        headers: {...MyGlobalVariables.headers, 'x-auth-token': authToken});
     HttpResponseUtils.checkForHttpResponseErrors(response: response);
   }
 }
