@@ -75,6 +75,15 @@ class Auth extends _$Auth {
     });
   }
 
+  void verifyOtp({required String email, required String otp}) async {
+    state = const AsyncLoading();
+
+    state = await AsyncValue.guard(() async {
+      await ref.read(authServiceProvider).verifyOTP(email, otp);
+      return AuthState(tokenJson: null, user: null);
+    });
+  }
+
   void updateAddressData(
       {required String id,
       required String city,

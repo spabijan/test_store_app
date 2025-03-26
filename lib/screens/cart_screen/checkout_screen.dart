@@ -53,9 +53,18 @@ class CheckoutScreen extends ConsumerWidget {
               paymentSheetParameters: SetupPaymentSheetParameters(
                   paymentIntentClientSecret: paymentIntent['client_secret'],
                   merchantDisplayName: 'Wiecznie Marudny Kitku'));
-          await Stripe.instance.presentPaymentSheet();
+
+          await Stripe.instance
+              .presentPaymentSheet(); // throws on payment fail, or when user close payment modal
+
+          // payment succeded
+          var succeded = Map<String, dynamic>.from(paymentIntent);
+          succeded['status'] =
+              'succeeded'; // don't need to get status form BE - 100% succeed here
           final cartEntries = ref.read(cartElementProvider);
-          ref.read(placeOrderProvider.notifier).placeOrder(cartEntries);
+          ref
+              .read(placeOrderProvider.notifier)
+              .placeStripeOrder(cartEntries, succeded);
         }
       });
     });
@@ -131,7 +140,7 @@ class CheckoutScreen extends ConsumerWidget {
 
   void _handleCashpayment(WidgetRef ref) {
     final cart = ref.read(cartElementProvider);
-    ref.read(placeOrderProvider.notifier).placeOrder(cart);
+    ref.read(placeOrderProvider.notifier).placeCashOrder(cart);
   }
 
   void _handleStripePayment(WidgetRef ref) {

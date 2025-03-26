@@ -1,10 +1,12 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:test_store_app/screens/account_details/account_screen.dart';
 import 'package:test_store_app/screens/account_details/order_screen.dart';
-import 'package:test_store_app/screens/authentication/create_account/register_screen.dart';
-import 'package:test_store_app/screens/authentication/login/login_screen.dart';
+import 'package:test_store_app/screens/authentication/otp_screen.dart';
+import 'package:test_store_app/screens/authentication/register_screen.dart';
+import 'package:test_store_app/screens/authentication/login_screen.dart';
 import 'package:test_store_app/screens/authentication/repository/providers/auth_state_details_provider.dart';
 import 'package:test_store_app/screens/cart_screen/cart_screen.dart';
 import 'package:test_store_app/screens/cart_screen/checkout_screen.dart';
@@ -19,22 +21,31 @@ import 'package:test_store_app/screens/stores_screen.dart';
 
 part 'go_router_provider.g.dart';
 
-var _authenticationRoutes = ['/${RouteNames.signin}', '/${RouteNames.signup}'];
+final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
+
+var _authenticationRoutes = [
+  '/${RouteNames.signin}',
+  '/${RouteNames.signup}',
+  '/${RouteNames.verifyEmail}'
+];
 
 bool _isInAuthenticationRoute(String matchedLocation) {
-  return _authenticationRoutes.contains(matchedLocation);
+  return _authenticationRoutes.any((element) {
+    return matchedLocation.contains(element);
+  });
 }
 
 bool _isInLoginRestrictedRoutes(String matchedLocation) {
-  bool notInAuth = !_isInAuthenticationRoute(matchedLocation);
+  bool inAuth = _isInAuthenticationRoute(matchedLocation);
   bool notSplashScreen = (matchedLocation != '/${RouteNames.splashScreen}');
-  return !notInAuth && notSplashScreen;
+  return !inAuth && notSplashScreen;
 }
 
 @riverpod
 GoRouter router(Ref ref) {
   final isLogin = ref.watch(isLoginProvider);
   return GoRouter(
+      navigatorKey: _rootNavigatorKey,
       redirect: (context, state) async {
         String? redirect;
         if (_isInAuthenticationRoute(state.matchedLocation) && isLogin) {
@@ -71,10 +82,20 @@ GoRouter router(Ref ref) {
           builder: (context, state) => const LoginScreen(),
         ),
         GoRoute(
-          path: '/signup',
-          name: RouteNames.signup,
-          builder: (context, state) => const RegisterScreen(),
-        ),
+            path: '/signup',
+            name: RouteNames.signup,
+            builder: (context, state) => const RegisterScreen(),
+            routes: [
+              GoRoute(
+                parentNavigatorKey: _rootNavigatorKey,
+                path: '/verify/:email',
+                name: RouteNames.verifyEmail,
+                builder: (context, state) {
+                  final email = state.pathParameters['email']!;
+                  return OtpScreen(registrationEmail: email);
+                },
+              )
+            ]),
         GoRoute(
           path: '/home',
           name: RouteNames.home,

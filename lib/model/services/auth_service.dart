@@ -52,4 +52,12 @@ class AuthService {
     final userJson = jsonEncode(jsonDecode(response.body)['user']);
     return userJson;
   }
+
+  Future<void> verifyOTP(String email, String otp) async {
+    final http.Response response = await http.post(
+        Uri.parse('${MyGlobalVariables.uri}/api/verify-otp'),
+        body: json.encode({'email': email, 'otp': otp}),
+        headers: MyGlobalVariables.headers);
+    HttpResponseUtils.checkForHttpResponseErrors(response: response);
+  }
 }

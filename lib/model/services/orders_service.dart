@@ -6,35 +6,11 @@ import 'package:http/http.dart' as http;
 import 'package:test_store_app/model/services/manage_http_response.dart';
 
 class OrdersService {
-  Future<void> uploadOrder(
-      {required String fullName,
-      required String email,
-      required String productName,
-      required double productPrice,
-      required int quantity,
-      required String category,
-      required String image,
-      required String buyerId,
-      required String vendorId,
-      required String city,
-      required String state,
-      required String locality,
-      required String loginToken}) async {
+  Future<void> uploadOrder({
+    required OrderModel order,
+    required String loginToken,
+  }) async {
     try {
-      final order = OrderModel(
-          fullName: fullName,
-          email: email,
-          productName: productName,
-          productPrice: productPrice,
-          quantity: quantity,
-          category: category,
-          image: image,
-          buyerId: buyerId,
-          vendorId: vendorId,
-          city: city,
-          state: state,
-          locality: locality);
-
       var response = await http.post(
           Uri.parse('${MyGlobalVariables.uri}/api/orders'),
           headers: {...MyGlobalVariables.headers, 'x-auth-token': loginToken},
@@ -79,6 +55,19 @@ class OrdersService {
           Uri.parse('${MyGlobalVariables.uri}/api/payment-intent'),
           headers: {...MyGlobalVariables.headers, 'x-auth-token': loginToken},
           body: jsonEncode({'amount': amount, 'currency': currency}));
+      HttpResponseUtils.checkForHttpResponseErrors(response: response);
+      return json.decode(response.body);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Map<String, dynamic>> getIntentStatus(
+      {required String intentId, required String loginToken}) async {
+    try {
+      final response = await http.get(
+          Uri.parse('${MyGlobalVariables.uri}/api/payment-intent/$intentId'),
+          headers: {...MyGlobalVariables.headers, 'x-auth-token': loginToken});
       HttpResponseUtils.checkForHttpResponseErrors(response: response);
       return json.decode(response.body);
     } catch (e) {

@@ -41,16 +41,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     ref.listen<AsyncValue<void>>(authProvider, (previous, next) {
-      next.whenOrNull(error: (error, stackTrace) {
-        if (error is HttpError) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text(error.message)));
-        } else {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text(error.toString())));
-        }
-      });
-      next.whenData((value) => GoRouter.of(context).goNamed(RouteNames.home));
+      next.whenOrNull(
+          data: (_) => GoRouter.of(context).goNamed(RouteNames.home),
+          error: (error, _) => error is HttpError
+              ? ScaffoldMessenger.of(context)
+                  .showSnackBar(SnackBar(content: Text(error.message)))
+              : ScaffoldMessenger.of(context)
+                  .showSnackBar(SnackBar(content: Text(error.toString()))));
     });
 
     final signinState = ref.watch(authProvider);

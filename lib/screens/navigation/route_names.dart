@@ -19,4 +19,5 @@ sealed class RouteNames {
   static const account = 'account';
   static const accountOrders = 'account/orders';
   static const accountOrdersDetails = 'account/orders/details';
+  static const verifyEmail = 'verifyEmail';
 }

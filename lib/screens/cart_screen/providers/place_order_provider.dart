@@ -1,4 +1,5 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:test_store_app/model/models/order/order.dart';
 import 'package:test_store_app/screens/authentication/repository/providers/auth_state_details_provider.dart';
 import 'package:test_store_app/screens/cart_screen/models/cart/cart_model.dart';
 import 'package:test_store_app/model/services/providers/orders_service_provider.dart';
@@ -16,7 +17,53 @@ class PlaceOrder extends _$PlaceOrder {
     ref.onDispose(() => _key = null);
   }
 
-  void placeOrder(List<CartModel> cart) async {
+  void placeStripeOrder(
+      List<CartModel> cart, Map<String, dynamic> intent) async {
+    state = const AsyncLoading();
+    final key = _key;
+
+    final newState = await AsyncValue.guard(() async {
+      await Future.forEach(cart, (product) async {
+        final service = ref.read(ordersServiceProvider);
+        final user = ref.read(loggedUserProvider)!;
+        final loginToken = ref.read(loginTokenProvider)!;
+        await service.uploadOrder(
+            order: OrderModel.fromStripePayment(user, product, intent),
+            loginToken: loginToken);
+      });
+      // force order provider to redo fetching
+      ref.invalidate(ordersProvider);
+    });
+
+    if (key == _key) {
+      state = newState;
+    }
+  }
+
+  void placeStripeNotPayedOrder(
+      List<CartModel> cart, Map<String, dynamic> intent) async {
+    state = const AsyncLoading();
+    final key = _key;
+
+    final newState = await AsyncValue.guard(() async {
+      await Future.forEach(cart, (product) async {
+        final service = ref.read(ordersServiceProvider);
+        final user = ref.read(loggedUserProvider)!;
+        final loginToken = ref.read(loginTokenProvider)!;
+        await service.uploadOrder(
+            order: OrderModel.fromStripePayment(user, product, intent),
+            loginToken: loginToken);
+      });
+      // force order provider to redo fetching
+      ref.invalidate(ordersProvider);
+    });
+
+    if (key == _key) {
+      state = newState;
+    }
+  }
+
+  void placeCashOrder(List<CartModel> cart) async {
     state = const AsyncLoading();
     final key = _key;
 
@@ -26,18 +73,7 @@ class PlaceOrder extends _$PlaceOrder {
         final user = ref.read(loggedUserProvider)!;
         final token = ref.read(loginTokenProvider)!;
         await service.uploadOrder(
-            fullName: user.fullName,
-            email: user.email,
-            productName: product.productName,
-            productPrice: product.productPrice.toDouble(),
-            quantity: product.orderQuantity,
-            category: product.category,
-            image: product.image.first,
-            buyerId: user.id,
-            vendorId: product.vendorID,
-            city: user.city,
-            state: user.state,
-            locality: user.locality,
+            order: OrderModel.fromCashPayment(user, product),
             loginToken: token);
       });
       // force order provider to redo fetching

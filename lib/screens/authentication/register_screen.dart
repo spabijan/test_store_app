@@ -50,7 +50,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         }
       });
 
-      next.whenData((value) => GoRouter.of(context).goNamed(RouteNames.home));
+      next.whenData((value) => GoRouter.of(context)
+          .goNamed(RouteNames.verifyEmail, pathParameters: {'email': email}));
     });
 
     final signinState = ref.watch(authProvider);
