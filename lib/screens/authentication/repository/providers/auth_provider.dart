@@ -29,15 +29,6 @@ class Auth extends _$Auth {
     return _refreshUserToken();
   }
 
-  // Future<AuthState> _restoreSessionFromStorage() async {
-  //   final tokenRepo = ref.watch(tokenRepositoryProvider);
-  //   final token = await tokenRepo.getToken();
-  //   final userRepo = ref.watch(userRepositoryProvider);
-  //   final user = await userRepo.getUser();
-
-  //   return AuthStateLoggedIn(tokenJson: token, user: user);
-  // }
-
   void signInUser({required String email, required String password}) async {
     state = const AsyncLoading();
 
@@ -53,15 +44,6 @@ class Auth extends _$Auth {
           return AuthStateLoggedOut();
       }
     });
-  }
-
-  Future<AuthStateLoggedIn> _saveLocalSession(
-      SuccessAuthResult authResult) async {
-    await ref.read(tokenRepositoryProvider).setToken(authResult.tokenJson);
-    await ref.read(userRepositoryProvider).setUser(authResult.userJson);
-    return AuthStateLoggedIn(
-        tokenJson: authResult.tokenJson,
-        user: User.fromJson(json.decode(authResult.userJson)));
   }
 
   void deleteUser() async {
@@ -83,14 +65,6 @@ class Auth extends _$Auth {
     state = await AsyncValue.guard(() async {
       return await _clearLocalSession();
     });
-  }
-
-  Future<AuthStateLoggedOut> _clearLocalSession() async {
-    await ref.read(tokenRepositoryProvider).deleteToken();
-    await ref.read(userRepositoryProvider).deleteUser();
-    await ref.read(cartProvider.notifier).clearCart();
-    await ref.read(wishlistProvider.notifier).clearWishList();
-    return AuthStateLoggedOut();
   }
 
   void signupUser(
@@ -151,5 +125,22 @@ class Auth extends _$Auth {
       case FailedAuthResult():
         return await _clearLocalSession();
     }
+  }
+
+  Future<AuthStateLoggedIn> _saveLocalSession(
+      SuccessAuthResult authResult) async {
+    await ref.read(tokenRepositoryProvider).setToken(authResult.tokenJson);
+    await ref.read(userRepositoryProvider).setUser(authResult.userJson);
+    return AuthStateLoggedIn(
+        tokenJson: authResult.tokenJson,
+        user: User.fromJson(json.decode(authResult.userJson)));
+  }
+
+  Future<AuthStateLoggedOut> _clearLocalSession() async {
+    await ref.read(tokenRepositoryProvider).deleteToken();
+    await ref.read(userRepositoryProvider).deleteUser();
+    await ref.read(cartProvider.notifier).clearCart();
+    await ref.read(wishlistProvider.notifier).clearWishList();
+    return AuthStateLoggedOut();
   }
 }
