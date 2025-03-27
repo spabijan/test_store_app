@@ -2,7 +2,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:test_store_app/model/models/user/user_methods.dart';
 import 'package:test_store_app/screens/authentication/repository/providers/auth_state_details_provider.dart';
 import 'package:test_store_app/screens/cart_screen/constants/payment_types.dart';
-import 'package:test_store_app/screens/cart_screen/models/cart/provider/cart_provider.dart';
 import 'package:test_store_app/screens/cart_screen/providers/create_payment_process_provider.dart';
 import 'package:test_store_app/screens/cart_screen/providers/place_order_provider.dart';
 import 'package:test_store_app/screens/cart_screen/providers/selected_payment_method_provider.dart';

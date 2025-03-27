@@ -10,7 +10,12 @@ bool isLogin(Ref ref) {
   final authState = ref.watch(authProvider);
   return authState.map(
       data: (data) {
-        return _checkIfHasLoggedState(data.value.user, data.value.tokenJson);
+        var authState = data.value;
+        return switch (authState) {
+          AuthStateLoggedOut() => false,
+          AuthStateLoggedIn() =>
+            _checkIfHasLoggedState(authState.user, authState.tokenJson)
+        };
       },
       error: checkPreviousState,
       loading: checkPreviousState);
@@ -19,9 +24,25 @@ bool isLogin(Ref ref) {
 bool checkPreviousState(AsyncValue<AuthState> previousState) {
   if (previousState.hasValue) {
     var previousValue = previousState.value!;
-    return _checkIfHasLoggedState(previousValue.user, previousValue.tokenJson);
+    return switch (previousValue) {
+      AuthStateLoggedOut() => false,
+      AuthStateLoggedIn() =>
+        _checkIfHasLoggedState(previousValue.user, previousValue.tokenJson),
+    };
   }
   return false;
+}
+
+@Riverpod(keepAlive: true)
+String? loginToken(Ref ref) {
+  final authState = ref.watch(authProvider);
+  return _extractTokenJson(authState.value);
+}
+
+@Riverpod(keepAlive: true)
+User? loggedUser(Ref ref) {
+  final authState = ref.watch(authProvider);
+  return _extractUser(authState.value);
 }
 
 bool _checkIfHasLoggedState(User? user, String? token) {
@@ -31,20 +52,18 @@ bool _checkIfHasLoggedState(User? user, String? token) {
   return false;
 }
 
-@Riverpod(keepAlive: true)
-String? loginToken(Ref ref) {
-  final authState = ref.watch(authProvider);
-  return authState.map(
-      data: (data) => data.value.tokenJson,
-      error: (error) => error.value?.tokenJson,
-      loading: (loading) => loading.value?.tokenJson);
+User? _extractUser(AuthState? authState) {
+  return switch (authState) {
+    AuthStateLoggedOut() => null,
+    AuthStateLoggedIn() => authState.user,
+    null => null,
+  };
 }
 
-@Riverpod(keepAlive: true)
-User? loggedUser(Ref ref) {
-  final authState = ref.watch(authProvider);
-  return authState.map(
-      data: (data) => data.value.user,
-      error: (error) => error.value?.user,
-      loading: (loading) => loading.value?.user);
+String? _extractTokenJson(AuthState? authState) {
+  return switch (authState) {
+    AuthStateLoggedOut() => null,
+    AuthStateLoggedIn() => authState.tokenJson,
+    null => null,
+  };
 }

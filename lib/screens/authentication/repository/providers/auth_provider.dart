@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:test_store_app/model/models/user/user.dart';
+import 'package:test_store_app/model/services/auth_service.dart';
 import 'package:test_store_app/screens/authentication/repository/providers/auth_repositories.dart';
 import 'package:test_store_app/model/services/providers/auth_controller_provider.dart';
 import 'package:test_store_app/screens/authentication/repository/providers/auth_state_details_provider.dart';
@@ -10,8 +11,12 @@ import 'package:test_store_app/screens/wishlist/providers/wishlist_provider.dart
 
 part 'auth_provider.g.dart';
 
-final class AuthState {
-  AuthState({this.user, this.tokenJson});
+sealed class AuthState {}
+
+final class AuthStateLoggedOut extends AuthState {}
+
+final class AuthStateLoggedIn extends AuthState {
+  AuthStateLoggedIn({this.user, this.tokenJson});
 
   final User? user;
   final String? tokenJson;
@@ -21,17 +26,17 @@ final class AuthState {
 class Auth extends _$Auth {
   @override
   FutureOr<AuthState> build() async {
-    return _restoreSessionFromStorage();
+    return _refreshUserToken();
   }
 
-  Future<AuthState> _restoreSessionFromStorage() async {
-    final tokenRepo = ref.watch(tokenRepositoryProvider);
-    final token = await tokenRepo.getToken();
-    final userRepo = ref.watch(userRepositoryProvider);
-    final user = await userRepo.getUser();
+  // Future<AuthState> _restoreSessionFromStorage() async {
+  //   final tokenRepo = ref.watch(tokenRepositoryProvider);
+  //   final token = await tokenRepo.getToken();
+  //   final userRepo = ref.watch(userRepositoryProvider);
+  //   final user = await userRepo.getUser();
 
-    return AuthState(tokenJson: token, user: user);
-  }
+  //   return AuthStateLoggedIn(tokenJson: token, user: user);
+  // }
 
   void signInUser({required String email, required String password}) async {
     state = const AsyncLoading();
@@ -41,13 +46,22 @@ class Auth extends _$Auth {
           .read(authServiceProvider)
           .signInUser(email: email, password: password);
 
-      await ref.read(tokenRepositoryProvider).setToken(authResult.tokenJson);
-      await ref.read(userRepositoryProvider).setUser(authResult.userJson);
-
-      return AuthState(
-          tokenJson: authResult.tokenJson,
-          user: User.fromJson(json.decode(authResult.userJson)));
+      switch (authResult) {
+        case SuccessAuthResult():
+          return await _saveLocalSession(authResult);
+        case FailedAuthResult():
+          return AuthStateLoggedOut();
+      }
     });
+  }
+
+  Future<AuthStateLoggedIn> _saveLocalSession(
+      SuccessAuthResult authResult) async {
+    await ref.read(tokenRepositoryProvider).setToken(authResult.tokenJson);
+    await ref.read(userRepositoryProvider).setUser(authResult.userJson);
+    return AuthStateLoggedIn(
+        tokenJson: authResult.tokenJson,
+        user: User.fromJson(json.decode(authResult.userJson)));
   }
 
   void deleteUser() async {
@@ -59,11 +73,7 @@ class Auth extends _$Auth {
       await ref
           .read(authServiceProvider)
           .deleteAccount(id: id, authToken: authToken);
-      await ref.read(tokenRepositoryProvider).deleteToken();
-      await ref.read(userRepositoryProvider).deleteUser();
-      await ref.read(cartProvider.notifier).clearCart();
-      await ref.read(wishlistProvider.notifier).clearWishList();
-      return AuthState(tokenJson: null, user: null);
+      return await _clearLocalSession();
     });
   }
 
@@ -71,12 +81,16 @@ class Auth extends _$Auth {
     state = const AsyncLoading();
 
     state = await AsyncValue.guard(() async {
-      await ref.read(tokenRepositoryProvider).deleteToken();
-      await ref.read(userRepositoryProvider).deleteUser();
-      await ref.read(cartProvider.notifier).clearCart();
-      await ref.read(wishlistProvider.notifier).clearWishList();
-      return AuthState(tokenJson: null, user: null);
+      return await _clearLocalSession();
     });
+  }
+
+  Future<AuthStateLoggedOut> _clearLocalSession() async {
+    await ref.read(tokenRepositoryProvider).deleteToken();
+    await ref.read(userRepositoryProvider).deleteUser();
+    await ref.read(cartProvider.notifier).clearCart();
+    await ref.read(wishlistProvider.notifier).clearWishList();
+    return AuthStateLoggedOut();
   }
 
   void signupUser(
@@ -89,7 +103,7 @@ class Auth extends _$Auth {
       await ref
           .read(authServiceProvider)
           .signupUser(fullName: fullName, email: email, password: password);
-      return AuthState(tokenJson: null, user: null);
+      return AuthStateLoggedOut();
     });
   }
 
@@ -98,7 +112,7 @@ class Auth extends _$Auth {
 
     state = await AsyncValue.guard(() async {
       await ref.read(authServiceProvider).verifyOTP(email, otp);
-      return AuthState(tokenJson: null, user: null);
+      return AuthStateLoggedOut();
     });
   }
 
@@ -116,11 +130,26 @@ class Auth extends _$Auth {
 
       await ref.read(userRepositoryProvider).setUser(updatedUserJson);
       final tokenRepository = ref.watch(tokenRepositoryProvider);
-
       final token = await tokenRepository.getToken();
-
-      return AuthState(
+      return AuthStateLoggedIn(
           tokenJson: token, user: User.fromJson(json.decode(updatedUserJson)));
     });
+  }
+
+  Future<AuthState> _refreshUserToken() async {
+    final token = await ref.read(tokenRepositoryProvider).getToken();
+    if (token == null) {
+      return AuthStateLoggedOut();
+    }
+
+    final refreshedAuthState =
+        await ref.read(authServiceProvider).checkAuthToken(authToken: token);
+
+    switch (refreshedAuthState) {
+      case SuccessAuthResult():
+        return await _saveLocalSession(refreshedAuthState);
+      case FailedAuthResult():
+        return await _clearLocalSession();
+    }
   }
 }
