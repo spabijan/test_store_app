@@ -37,10 +37,21 @@ class ProductServices {
         '${MyGlobalVariables.uri}/api/search-product?query=$query');
   }
 
-  Future<List<ProductModel>> _loadProductsByRequest(String request) async {
+  Future<List<ProductModel>> loadVendorProducts(
+      {required String vendorId, required String? token}) async {
+    return await _loadProductsByRequest(
+        '${MyGlobalVariables.uri}/api/product/vendor/$vendorId',
+        token: token);
+  }
+
+  Future<List<ProductModel>> _loadProductsByRequest(String request,
+      {String? token}) async {
     try {
-      var response = await http.get(Uri.parse(request),
-          headers: MyGlobalVariables.headers);
+      var headers = token != null
+          ? {...MyGlobalVariables.headers, 'x-auth-token': token}
+          : MyGlobalVariables.headers;
+
+      var response = await http.get(Uri.parse(request), headers: headers);
       HttpResponseUtils.checkForHttpResponseErrors(response: response);
       if (response.statusCode == 204) {
         return [];

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:test_store_app/screens/category_screen/components/product_item_widget.dart';
 import 'package:test_store_app/screens/category_screen/components/product_list_grid_widget.dart';
 import 'package:test_store_app/screens/category_screen/models/product_view_model.dart';
 import 'package:test_store_app/screens/category_screen/models/subcategory_view_model.dart';
@@ -28,9 +29,10 @@ class _SubcategoryScreenState extends ConsumerState<SubcategoryScreen> {
               final productList = data.value;
               return Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: ProductListGrid(
-                    productList: productList,
-                    onProductClicked: _gotoProductDetails),
+                child: ManagedListGrid(
+                    gridElements: productList,
+                    onTileClicked: _gotoProductDetails,
+                    child: const ProductItemWidget()),
               );
             },
             error: (error) => const Center(child: Text('An error occurred')),

@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:test_store_app/screens/category_screen/components/product_item_widget.dart';
-import 'package:test_store_app/screens/category_screen/models/product_view_model.dart';
 import 'package:test_store_app/screens/category_screen/providers/product_item_provider.dart';
 
-class ProductListGrid extends StatelessWidget {
-  const ProductListGrid(
-      {required this.productList, required this.onProductClicked, super.key});
+class ManagedListGrid<T> extends StatelessWidget {
+  const ManagedListGrid(
+      {required this.gridElements,
+      required this.onTileClicked,
+      required this.child,
+      super.key});
 
-  final List<ProductViewModel> productList;
-  final Function(ProductViewModel product) onProductClicked;
+  final List<T> gridElements;
+  final Function(T model) onTileClicked;
+  final Widget child;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +20,7 @@ class ProductListGrid extends StatelessWidget {
     final aspectRatio = screenWidth < 600 ? 3 / 4 : 4 / 5;
 
     return GridView.builder(
-      itemCount: productList.length,
+      itemCount: gridElements.length,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: crossAxisCount,
           childAspectRatio: aspectRatio,
@@ -26,10 +28,10 @@ class ProductListGrid extends StatelessWidget {
           crossAxisSpacing: 8),
       itemBuilder: (context, index) {
         return InkWell(
-          onTap: () => onProductClicked(productList[index]),
+          onTap: () => onTileClicked(gridElements[index]),
           child: ProviderScope(overrides: [
-            productItemProvider.overrideWithValue(productList[index])
-          ], child: const ProductItemWidget()),
+            productItemProvider.overrideWithValue(gridElements[index])
+          ], child: child),
         );
       },
     );

@@ -20,7 +20,7 @@ class ProductItemWidget extends ConsumerWidget {
             .showSnackBar(SnackBar(content: Text(error.toString())));
       });
     });
-    final product = ref.watch(productItemProvider);
+    final product = ref.watch(productItemProvider) as ProductViewModel;
 
     return Container(
       width: 170,

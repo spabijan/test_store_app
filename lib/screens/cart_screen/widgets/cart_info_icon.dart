@@ -46,7 +46,7 @@ class AppBarWidget extends StatelessWidget {
                 ),
                 const Spacer(),
                 Stack(clipBehavior: Clip.none, children: [
-                  Image.asset(AssetIcons.not, width: 25, height: 25),
+                  Image.asset(AssetIcons.cart, width: 25, height: 25),
                   if (itemCount > 0)
                     Positioned(
                       top: -8,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:test_store_app/screens/category_screen/components/product_item_widget.dart';
 import 'package:test_store_app/screens/category_screen/components/product_list_grid_widget.dart';
 import 'package:test_store_app/screens/category_screen/models/product_view_model.dart';
 import 'package:test_store_app/screens/category_screen/providers/search_product_provider.dart';
@@ -49,9 +50,10 @@ class _SearchProductScreenState extends State<SearchProductScreen> {
                           return data.value.isEmpty
                               ? const Center(child: Text('No product found'))
                               : Expanded(
-                                  child: ProductListGrid(
-                                      productList: data.value,
-                                      onProductClicked: _gotoProductDetails));
+                                  child: ManagedListGrid(
+                                      gridElements: data.value,
+                                      onTileClicked: _gotoProductDetails,
+                                      child: const ProductItemWidget()));
                         },
                         error: (error) => Center(
                                 child: Column(

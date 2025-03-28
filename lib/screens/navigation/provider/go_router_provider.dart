@@ -17,7 +17,7 @@ import 'package:test_store_app/screens/home_screen/home_screen.dart';
 import 'package:test_store_app/screens/navigation/provider/splash_screen_ready_provider.dart';
 import 'package:test_store_app/screens/navigation/route_names.dart';
 import 'package:test_store_app/screens/navigation/splash_screen.dart';
-import 'package:test_store_app/screens/stores_screen.dart';
+import 'package:test_store_app/screens/stores/stores_screen.dart';
 
 part 'go_router_provider.g.dart';
 
